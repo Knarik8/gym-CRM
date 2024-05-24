@@ -1,0 +1,78 @@
+{
+  "trainees": [
+    {
+      "id": "be39f1d1-d92f-4e10-9ffb-df878a0911d4",
+      "firstName": "Ivan",
+      "lastName": "Ivanov",
+      "username": "Vanya",
+      "password": "pass",
+      "isActive": true,
+      "dateOfBirth": "1995-05-06",
+      "address": {
+        "city": "Moscow",
+        "street": "New st.",
+        "houseNumber": 50,
+        "apartmentNumber": 55
+      }
+    },
+    {
+      "id": "2e2b5f2d-49bf-5b8d-9c1b-5b9121dab0f2",
+      "firstName": "Petr",
+      "lastName": "Petrov",
+      "username": "Petr",
+      "password": "pass",
+      "isActive": true,
+      "dateOfBirth": "1990-08-15",
+      "address": {
+        "city": "Saint Petersburg",
+        "street": "Old st.",
+        "houseNumber": 10,
+        "apartmentNumber": 20
+      }
+    }
+  ],
+  "trainers": [
+    {
+      "id": "764d13c8-3334-42c3-b534-5bacccee46f7",
+      "firstName": "Mariya",
+      "lastName": "Ivanova",
+      "username": "masha",
+      "password": "pass",
+      "isActive": true,
+      "specialization": "CARDIO"
+    },
+    {
+      "id": "b2fa1462-1a5c-4e56-8aa4-72b16f85304a",
+      "firstName": "Anna",
+      "lastName": "Smirnova",
+      "username": "anna",
+      "password": "pass",
+      "isActive": true,
+      "specialization": "FLEXIBILITY"
+    }
+  ],
+  "trainings": [
+    {
+      "id": "3f0046e7-79ef-8e9f-ce3e-8e9234dab3f5",
+      "trainerId": "764d13c8-3334-42c3-b534-5bacccee46f7",
+      "trainingName": "Cardio training",
+      "trainingType": "CARDIO",
+      "trainingDays": [
+        "MONDAY",
+        "WEDNESDAY"
+      ],
+      "trainingDuration": "PT1H"
+    },
+    {
+      "id": "3f0046e6-66bd-4999-95ff-f3025d72f91f",
+      "trainerId": "b2fa1462-1a5c-4e56-8aa4-72b16f85304a",
+      "trainingName": "FLEXIBILITY training",
+      "trainingType": "FLEXIBILITY",
+      "trainingDays": [
+        "TUESDAY",
+        "THURSDAY"
+      ],
+      "trainingDuration": "PT45M"
+    }
+  ]
+}
