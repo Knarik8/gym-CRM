@@ -1,7 +1,18 @@
 package epam.gym.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.ToString;
+import lombok.EqualsAndHashCode;
+
 import java.time.LocalDate;
 
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@ToString(callSuper = true)
 public class Trainee extends User {
 
     private LocalDate dateOfBirth;
@@ -13,28 +24,5 @@ public class Trainee extends User {
         this.dateOfBirth = dateOfBirth;
         this.address = address;
     }
-
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() + ", Date of Birth: " + dateOfBirth + ", Address: " + address;
-    }
-
 
 }

@@ -1,5 +1,12 @@
 package epam.gym.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class Address {
 
     private String city;
@@ -7,21 +14,4 @@ public class Address {
     private int buildingNumber;
     private int apartmentNumber;
 
-    public Address(String city, String street, int buildingNumber, int apartmentNumber){
-        this.city = city;
-        this.street = street;
-        this.buildingNumber = buildingNumber;
-        this.apartmentNumber = apartmentNumber;
-
-    }
-
-    @Override
-    public String toString() {
-        return "Address{" +
-                "city='" + city + '\'' +
-                ", street='" + street + '\'' +
-                ", buildingNumber=" + buildingNumber +
-                ", apartmentNumber=" + apartmentNumber +
-                '}';
-    }
 }

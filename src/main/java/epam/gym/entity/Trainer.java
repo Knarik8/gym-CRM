@@ -1,5 +1,16 @@
 package epam.gym.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.ToString;
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@ToString(callSuper = true)
 public class Trainer extends User {
 
     private TrainingType specialization;
@@ -11,16 +22,4 @@ public class Trainer extends User {
         this.specialization = specialization;
     }
 
-    public TrainingType getSpecialization() {
-        return specialization;
-    }
-
-    public void setSpecialization(TrainingType specialization) {
-        this.specialization = specialization;
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() + ", Specialization: " + specialization;
-    }
 }
