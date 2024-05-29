@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Set;
-
 @Service
 public class TraineeServiceImpl implements TraineeService {
 
@@ -21,8 +19,6 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     public Trainee createTrainee(Trainee trainee) {
-        Set<String> existingUsernames = traineeDaoImpl.getExistingUsernames();
-
         logger.info("Created trainee with ID: {}", trainee.getId());
         return traineeDaoImpl.createTrainee(trainee);
     }
