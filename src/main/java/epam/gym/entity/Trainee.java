@@ -1,28 +1,40 @@
 package epam.gym.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import lombok.ToString;
-import lombok.EqualsAndHashCode;
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @ToString(callSuper = true)
+@Entity
+@Table(name = "trainee")
+@SuperBuilder
 public class Trainee extends User {
 
     private LocalDate dateOfBirth;
+
+
+    @OneToOne(mappedBy = "trainee", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private Address address;
 
-    public Trainee(Long id, String firstName, String lastName, String username, String password, boolean isActive,
-                   LocalDate dateOfBirth, Address address) {
-        super(id, firstName, lastName, username, password, isActive);
-        this.dateOfBirth = dateOfBirth;
-        this.address = address;
-    }
+    @ManyToMany
+    @JoinTable(
+            name = "training",
+            joinColumns = @JoinColumn(name = "trainee_id"),
+            inverseJoinColumns = @JoinColumn(name = "trainer_id")
+    )
+    @ToString.Exclude
+    private Set<Trainer> trainers = new HashSet<>();
+
+    @OneToMany(mappedBy = "trainee", fetch = FetchType.EAGER)
+    private Set<Training> trainings = new HashSet<>();
 
 }

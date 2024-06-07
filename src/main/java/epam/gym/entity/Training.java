@@ -1,8 +1,11 @@
 package epam.gym.entity;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.Duration;
 import java.util.Set;
@@ -10,23 +13,33 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Entity
+@Table(name = "training")
+@Builder
+@ToString
 public class Training {
 
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-    private Long trainerId;
+
     private String trainingName;
-    private TrainingType trainingType;
+
+    @ManyToOne
+    @JoinColumn(name = "training_type_id")
+    private TrainingTypeEntity trainingType;
+
+    @Enumerated(EnumType.STRING)
     private Set<DayOfWeek> trainingDays;
+
     private Duration trainingDuration;
 
-    @Override
-    public String toString() {
-        return "Training{" +
-                "trainerId=" + trainerId +
-                ", trainingName='" + trainingName + '\'' +
-                ", trainingType=" + trainingType +
-                ", trainingDays=" + trainingDays +
-                ", trainingDuration=" + trainingDuration.toMinutes() + "min" +
-                '}';
-    }
+    @ManyToOne
+    @JoinColumn(name = "trainee_id")
+    private Trainee trainee;
+
+    @ManyToOne
+    @JoinColumn(name = "trainer_id")
+    private Trainer trainer;
+
 }
