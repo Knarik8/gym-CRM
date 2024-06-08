@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-
 import java.time.Duration;
 import java.util.Set;
 
@@ -16,7 +14,6 @@ import java.util.Set;
 @Entity
 @Table(name = "training")
 @Builder
-@ToString
 public class Training {
 
     @Id
