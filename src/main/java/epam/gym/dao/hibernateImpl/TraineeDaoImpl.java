@@ -7,6 +7,8 @@ import epam.gym.entity.Training;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashSet;
@@ -16,6 +18,8 @@ import java.util.Set;
 
 @Repository
 public class TraineeDaoImpl implements TraineeDao {
+
+    private static final Logger logger = LoggerFactory.getLogger(TrainerDaoImpl.class);
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -62,6 +66,7 @@ public class TraineeDaoImpl implements TraineeDao {
                     .getSingleResult();
             return Optional.of(trainee);
         } catch (Exception e) {
+            logger.error("Error finding trainee by username: {}", username, e);
             return Optional.empty();
         }
     }

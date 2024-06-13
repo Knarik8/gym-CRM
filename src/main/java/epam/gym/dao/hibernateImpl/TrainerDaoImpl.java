@@ -60,6 +60,7 @@ public class TrainerDaoImpl implements TrainerDao {
                     .getSingleResult();
             return Optional.of(trainer);
         } catch (Exception e) {
+            logger.error("Error finding trainer by username: {}", username, e);
             return Optional.empty();
         }
     }
