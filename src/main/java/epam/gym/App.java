@@ -94,7 +94,7 @@ public class App
 
             trainerService.create(trainer);
 
-            System.out.println("Selected trainer by username: " + trainerService.selectTrainerByUsername("Petr.Petrov"));
+            System.out.println("Selected trainer by username: " + trainerService.findTrainerByUsername("Petr.Petrov"));
 
             System.out.println(traineeService.getTrainingsByTraineeUsernameAndTrainerName(trainee.getUsername(),trainer.getFirstName(), trainee.getId(), trainee.getPassword()));
 

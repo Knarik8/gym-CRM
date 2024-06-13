@@ -82,8 +82,8 @@ public class TrainerServiceImpl implements TrainerService {
         return Optional.empty();
     }
     @Override
-    public Optional<Trainer> selectTrainerByUsername(String username) {
-        Optional<Trainer> trainerOpt = trainerDao.selectTrainerByUsername(username);
+    public Optional<Trainer> findTrainerByUsername(String username) {
+        Optional<Trainer> trainerOpt = trainerDao.findTrainerByUsername(username);
         if (trainerOpt.isPresent()) {
             logger.info("Found trainer with username: {}", username);
         } else {

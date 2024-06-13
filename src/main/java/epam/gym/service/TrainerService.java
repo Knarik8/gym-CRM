@@ -15,7 +15,7 @@ public interface TrainerService {
 
     Optional<Trainer> findById(long id, String username, String password) throws AuthenticationException;
 
-    Optional<Trainer> selectTrainerByUsername(String username);
+    Optional<Trainer> findTrainerByUsername(String username);
 
     Optional<Trainer> changePassword(Long id, String username, String oldPassword, String newPassword) throws AuthenticationException;
 

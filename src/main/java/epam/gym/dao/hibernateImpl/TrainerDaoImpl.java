@@ -52,7 +52,7 @@ public class TrainerDaoImpl implements TrainerDao {
     }
 
     @Override
-    public Optional<Trainer> selectTrainerByUsername(String username) {
+    public Optional<Trainer> findTrainerByUsername(String username) {
         try {
             Trainer trainer = entityManager.createQuery("SELECT t FROM Trainer t LEFT JOIN FETCH t.trainings WHERE " +
                             "t.username = :username", Trainer.class)

@@ -17,7 +17,7 @@ public interface TrainerDao {
 
     Set<String> getExistingUsernames();
 
-    Optional<Trainer> selectTrainerByUsername(String username);
+    Optional<Trainer> findTrainerByUsername(String username);
 
     Optional<Trainer> changePassword(Long id, String newPassword);
 
