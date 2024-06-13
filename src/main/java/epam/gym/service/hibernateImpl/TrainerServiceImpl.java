@@ -3,6 +3,7 @@ package epam.gym.service.hibernateImpl;
 import epam.gym.dao.TrainerDao;
 import epam.gym.entity.Trainer;
 import epam.gym.entity.Training;
+import epam.gym.exception.AuthenticationException;
 import epam.gym.service.TrainerService;
 import epam.gym.util.AuthenticationService;
 import epam.gym.util.ProfileGenerationHelper;
@@ -11,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.naming.AuthenticationException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -42,7 +42,7 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
-    public Trainer update(Long id, @NonNull Trainer updatedTrainer, String username, String password) throws AuthenticationException {
+    public Trainer update(Long id, @NonNull Trainer updatedTrainer, String username, String password) {
         if (authenticationService.authenticate(id, username, password)) {
             Optional<Trainer> existingTrainerOpt = trainerDao.findById(id);
             if (existingTrainerOpt.isPresent()) {
@@ -67,7 +67,7 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
-    public Optional<Trainer> findById(long id, String username, String password) throws AuthenticationException {
+    public Optional<Trainer> findById(long id, String username, String password) {
         if (authenticationService.authenticate(id, username, password)) {
             Optional<Trainer> existingTrainerOpt = trainerDao.findById(id);
             if (existingTrainerOpt.isPresent()) {
@@ -95,7 +95,7 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
-    public Optional<Trainer> changePassword(Long id, String username, String oldPassword, String newPassword) throws AuthenticationException {
+    public Optional<Trainer> changePassword(Long id, String username, String oldPassword, String newPassword) {
         if (authenticationService.authenticate(id, username, oldPassword)) {
             Optional<Trainer> updatedTrainer = trainerDao.changePassword(id, newPassword);
             if (updatedTrainer.isPresent()) {
@@ -112,7 +112,7 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
-    public void activateTrainer(Long id, String username, String password) throws AuthenticationException {
+    public void activateTrainer(Long id, String username, String password) {
         if (authenticationService.authenticate(id, username, password)) {
             Optional<Trainer> trainerOpt = findById(id, username, password);
             if (trainerOpt.isPresent()) {
@@ -129,7 +129,7 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
-    public void deactivateTrainer(Long id, String username, String password) throws AuthenticationException {
+    public void deactivateTrainer(Long id, String username, String password) {
         if (authenticationService.authenticate(id, username, password)) {
             Optional<Trainer> trainerOpt = findById(id, username, password);
             if (trainerOpt.isPresent()) {
@@ -146,7 +146,8 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
-    public List<Training> getTrainingsByTrainerUsernameAndTraineeName(String trainerUsername, String traineeName, Long trainerId, String trainerPassword) throws AuthenticationException {
+    public List<Training> getTrainingsByTrainerUsernameAndTraineeName(String trainerUsername, String traineeName,
+                                                                      Long trainerId, String trainerPassword) {
         if (authenticationService.authenticate(trainerId, trainerUsername, trainerPassword)) {
             List<Training> trainings = trainerDao.getTrainingsByTrainerUsernameAndTraineeName(trainerUsername, traineeName);
             logger.info("Retrieved trainings for trainerUsername: {} and traineeName: {}", trainerUsername, traineeName);

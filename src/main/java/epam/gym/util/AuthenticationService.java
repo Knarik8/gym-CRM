@@ -1,10 +1,10 @@
 package epam.gym.util;
 
 import epam.gym.entity.User;
+import epam.gym.exception.AuthenticationException;
 import epam.gym.service.UserService;
 import org.springframework.stereotype.Service;
 
-import javax.naming.AuthenticationException;
 import java.util.Optional;
 
 @Service
@@ -16,7 +16,7 @@ public class AuthenticationService {
         this.userService = userService;
     }
 
-    public boolean authenticate(Long id, String username, String password) throws AuthenticationException {
+    public boolean authenticate(Long id, String username, String password) {
         Optional<User> userOptional = userService.findByUsername(username);
         if (userOptional.isPresent()) {
             User user = userOptional.get();

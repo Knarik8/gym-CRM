@@ -2,6 +2,7 @@ package epam.gym.util;
 
 import epam.gym.entity.Address;
 import epam.gym.entity.Trainee;
+import epam.gym.exception.AuthenticationException;
 import epam.gym.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.naming.AuthenticationException;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -52,7 +52,7 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    void givenTraineeExist_whenAuthenticate_thenSuccess() throws AuthenticationException {
+    void givenTraineeExist_whenAuthenticate_thenSuccess() {
         when(userService.findByUsername(trainee.getUsername())).thenReturn(Optional.of(trainee));
 
         boolean isAuthenticated = authenticationService.authenticate(trainee.getId(), trainee.getUsername(), trainee.getPassword());

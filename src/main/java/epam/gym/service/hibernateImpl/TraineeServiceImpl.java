@@ -4,6 +4,7 @@ import epam.gym.dao.TraineeDao;
 import epam.gym.entity.Trainee;
 import epam.gym.entity.Trainer;
 import epam.gym.entity.Training;
+import epam.gym.exception.AuthenticationException;
 import epam.gym.service.TraineeService;
 import epam.gym.util.AuthenticationService;
 import epam.gym.util.ProfileGenerationHelper;
@@ -11,7 +12,6 @@ import lombok.NonNull;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.naming.AuthenticationException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -46,7 +46,7 @@ public class TraineeServiceImpl implements TraineeService {
     }
 
     @Override
-    public Trainee update(Long id, @NonNull Trainee updatedTrainee, String username, String password) throws AuthenticationException {
+    public Trainee update(Long id, @NonNull Trainee updatedTrainee, String username, String password) {
         logger.info("Attempting to update trainee with ID: {}, by user: {}", id, username);
         if (authenticationService.authenticate(id, username, password)) {
             Optional<Trainee> existingTraineeOpt = traineeDao.findById(id);
@@ -72,7 +72,7 @@ public class TraineeServiceImpl implements TraineeService {
     }
 
     @Override
-    public Optional<Trainee> findById(long id, String username, String password) throws AuthenticationException {
+    public Optional<Trainee> findById(long id, String username, String password) {
         logger.info("Attempting to find trainee with ID: {}, by user: {}", id, username);
         if (authenticationService.authenticate(id, username, password)) {
             Optional<Trainee> existingTraineeOpt = traineeDao.findById(id);
@@ -90,7 +90,7 @@ public class TraineeServiceImpl implements TraineeService {
     }
 
     @Override
-    public void deleteTraineeById(Long id, String username, String password) throws AuthenticationException {
+    public void deleteTraineeById(Long id, String username, String password) {
         logger.info("Attempting to delete trainee with ID: {}, by user: {}", id, username);
         if (authenticationService.authenticate(id, username, password)) {
             traineeDao.deleteById(id);
@@ -113,7 +113,7 @@ public class TraineeServiceImpl implements TraineeService {
     }
 
     @Override
-    public Optional<Trainee> changePassword(Long id, String username, String oldPassword, String newPassword) throws AuthenticationException {
+    public Optional<Trainee> changePassword(Long id, String username, String oldPassword, String newPassword) {
         if (authenticationService.authenticate(id, username, oldPassword)) {
             Optional<Trainee> updatedTrainee = traineeDao.changePassword(id, newPassword);
             if (updatedTrainee.isPresent()) {
@@ -130,7 +130,7 @@ public class TraineeServiceImpl implements TraineeService {
 
 
     @Override
-    public void activateTrainee(Long id, String username, String password) throws AuthenticationException {
+    public void activateTrainee(Long id, String username, String password) {
         if (authenticationService.authenticate(id, username, password)) {
             Optional<Trainee> traineeOpt = findById(id, username, password);
             if (traineeOpt.isPresent()) {
@@ -147,7 +147,7 @@ public class TraineeServiceImpl implements TraineeService {
     }
 
     @Override
-    public void deactivateTrainee(Long id, String username, String password) throws AuthenticationException {
+    public void deactivateTrainee(Long id, String username, String password) {
         if (authenticationService.authenticate(id, username, password)) {
             Optional<Trainee> traineeOpt = findById(id, username, password);
             if (traineeOpt.isPresent()) {
@@ -164,7 +164,7 @@ public class TraineeServiceImpl implements TraineeService {
     }
 
     @Override
-    public boolean deleteTraineeByUsername(String username, String password) throws AuthenticationException {
+    public boolean deleteTraineeByUsername(String username, String password) {
         Optional<Trainee> traineeOptional = traineeDao.findTraineeByUsername(username);
         if (traineeOptional.isPresent()) {
             Trainee trainee = traineeOptional.get();
@@ -183,7 +183,8 @@ public class TraineeServiceImpl implements TraineeService {
     }
 
     @Override
-    public List<Training> getTrainingsByTraineeUsernameAndTrainerName(String traineeUsername, String trainerName, Long traineeId, String traineePassword) throws AuthenticationException {
+    public List<Training> getTrainingsByTraineeUsernameAndTrainerName(String traineeUsername, String trainerName,
+                                                                      Long traineeId, String traineePassword) {
         if (authenticationService.authenticate(traineeId, traineeUsername, traineePassword)) {
             List<Training> trainings = traineeDao.getTrainingsByTraineeUsernameAndTrainerName(traineeUsername, trainerName);
             logger.info("Retrieved trainings for traineeUsername: {} and trainerName: {}", traineeUsername, trainerName);
