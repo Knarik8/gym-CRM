@@ -44,18 +44,18 @@ class TrainingTypeServiceImplTest {
 
     @Test
     void givenTrainingTypeExist_whenSelectByName_thenSuccess() {
-        when(trainingTypeDao.selectByName(any(TrainingType.class))).thenReturn(trainingTypeEntity);
+        when(trainingTypeDao.findByName(any(TrainingType.class))).thenReturn(trainingTypeEntity);
 
-        TrainingTypeEntity result = trainingTypeService.selectByName(trainingTypeEntity.getTrainingTypeName());
+        TrainingTypeEntity result = trainingTypeService.findByName(trainingTypeEntity.getTrainingTypeName());
 
         assertEquals(trainingTypeEntity, result);
     }
 
     @Test
     void givenTrainingTypeNotExist_whenSelectByName_thenReturnNull() {
-        when(trainingTypeDao.selectByName(any(TrainingType.class))).thenReturn(null);
+        when(trainingTypeDao.findByName(any(TrainingType.class))).thenReturn(null);
 
-        TrainingTypeEntity result = trainingTypeService.selectByName(trainingTypeEntity.getTrainingTypeName());
+        TrainingTypeEntity result = trainingTypeService.findByName(trainingTypeEntity.getTrainingTypeName());
 
         assertNull(result);
     }

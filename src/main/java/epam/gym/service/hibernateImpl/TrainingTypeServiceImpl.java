@@ -26,8 +26,8 @@ public class TrainingTypeServiceImpl implements TrainingTypeService {
     }
 
     @Override
-    public TrainingTypeEntity selectByName(TrainingType trainingType) {
-        TrainingTypeEntity trainingTypeEntity = trainingTypeDao.selectByName(trainingType);
+    public TrainingTypeEntity findByName(TrainingType trainingType) {
+        TrainingTypeEntity trainingTypeEntity = trainingTypeDao.findByName(trainingType);
         if (trainingTypeEntity != null) {
             logger.info("Found training type with name: {}", trainingType);
         } else {

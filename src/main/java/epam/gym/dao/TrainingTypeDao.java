@@ -7,5 +7,5 @@ public interface TrainingTypeDao {
 
     TrainingTypeEntity create(TrainingTypeEntity trainingType);
 
-    TrainingTypeEntity selectByName(TrainingType trainingType);
+    TrainingTypeEntity findByName(TrainingType trainingType);
 }

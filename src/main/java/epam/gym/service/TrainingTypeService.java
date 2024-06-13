@@ -7,7 +7,7 @@ public interface TrainingTypeService {
 
     TrainingTypeEntity create(TrainingTypeEntity trainingTypeEntity);
 
-    TrainingTypeEntity selectByName(TrainingType trainingType);
+    TrainingTypeEntity findByName(TrainingType trainingType);
 
 
 }
