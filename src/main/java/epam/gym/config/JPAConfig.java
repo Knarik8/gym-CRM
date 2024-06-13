@@ -1,10 +1,10 @@
 package epam.gym.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -15,7 +15,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
-import java.util.Objects;
 import java.util.Properties;
 
 
@@ -25,11 +24,24 @@ import java.util.Properties;
 @EnableTransactionManagement
 public class JPAConfig {
 
-    private final Environment env;
+    @Value("${jdbc.driverClassName}")
+    private String driverClassName;
 
-    JPAConfig(Environment env){
-        this.env = env;
-    }
+    @Value("${jdbc.url}")
+    private String url;
+
+    @Value("${jdbc.user}")
+    private String username;
+
+    @Value("${jdbc.pass}")
+    private String password;
+
+    @Value("${hibernate.hbm2ddl.auto}")
+    private String hbm2ddlAuto;
+
+    @Value("${hibernate.dialect}")
+    private String dialect;
+
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
@@ -46,10 +58,10 @@ public class JPAConfig {
     @Bean
     public DataSource dataSource() {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(Objects.requireNonNull(env.getProperty("jdbc.driverClassName")));
-        dataSource.setUrl(Objects.requireNonNull(env.getProperty("jdbc.url")));
-        dataSource.setUsername(Objects.requireNonNull(env.getProperty("jdbc.user")));
-        dataSource.setPassword(Objects.requireNonNull(env.getProperty("jdbc.pass")));
+        dataSource.setDriverClassName(driverClassName);
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
 
         return dataSource;
     }
@@ -70,8 +82,8 @@ public class JPAConfig {
 
     final Properties additionalProperties() {
         final Properties hibernateProperties = new Properties();
-        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
-        hibernateProperties.setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
+        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", hbm2ddlAuto);
+        hibernateProperties.setProperty("hibernate.dialect", dialect);
         hibernateProperties.setProperty("hibernate.cache.use_second_level_cache", "false");
 
         return hibernateProperties;
