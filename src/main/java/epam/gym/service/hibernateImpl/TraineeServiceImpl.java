@@ -7,6 +7,7 @@ import epam.gym.entity.Training;
 import epam.gym.service.TraineeService;
 import epam.gym.util.AuthenticationService;
 import epam.gym.util.ProfileGenerationHelper;
+import lombok.NonNull;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,7 @@ public class TraineeServiceImpl implements TraineeService {
     }
 
     @Override
-    public Trainee create(Trainee trainee) {
+    public Trainee create(@NonNull Trainee trainee) {
         logger.info("Creating a new trainee with first name: {} and last name: {}", trainee.getFirstName(), trainee.getLastName());
         Set<String> existingUsernames = traineeDao.getExistingUsernames();
         String username = ProfileGenerationHelper.generateUsername(trainee.getFirstName(), trainee.getLastName(),
@@ -45,7 +46,7 @@ public class TraineeServiceImpl implements TraineeService {
     }
 
     @Override
-    public Trainee update(Long id, Trainee updatedTrainee, String username, String password) throws AuthenticationException {
+    public Trainee update(Long id, @NonNull Trainee updatedTrainee, String username, String password) throws AuthenticationException {
         logger.info("Attempting to update trainee with ID: {}, by user: {}", id, username);
         if (authenticationService.authenticate(id, username, password)) {
             Optional<Trainee> existingTraineeOpt = traineeDao.findById(id);

@@ -5,6 +5,7 @@ import epam.gym.entity.Trainer;
 import epam.gym.entity.Training;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -26,7 +27,7 @@ public class TrainerDaoImpl implements TrainerDao {
 
     @Override
     @Transactional
-    public Trainer create(Trainer trainer) {
+    public Trainer create(@NonNull Trainer trainer) {
         entityManager.persist(trainer);
         logger.info("Created trainer with ID: {}", trainer.getId());
         return trainer;
@@ -34,7 +35,7 @@ public class TrainerDaoImpl implements TrainerDao {
 
     @Override
     @Transactional
-    public Trainer update(Trainer trainer) {
+    public Trainer update(@NonNull Trainer trainer) {
         return entityManager.merge(trainer);
     }
 

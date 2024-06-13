@@ -7,6 +7,7 @@ import epam.gym.entity.Training;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -26,14 +27,14 @@ public class TraineeDaoImpl implements TraineeDao {
 
     @Override
     @Transactional
-    public Trainee create(Trainee trainee) {
+    public Trainee create(@NonNull Trainee trainee) {
         entityManager.persist(trainee);
         return trainee;
     }
 
     @Override
     @Transactional
-    public Trainee update(Trainee trainee) {
+    public Trainee update(@NonNull Trainee trainee) {
         return entityManager.merge(trainee);
     }
 

@@ -6,6 +6,7 @@ import epam.gym.entity.Training;
 import epam.gym.service.TrainerService;
 import epam.gym.util.AuthenticationService;
 import epam.gym.util.ProfileGenerationHelper;
+import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
-    public Trainer create(Trainer trainer) {
+    public Trainer create(@NonNull Trainer trainer) {
         Set<String> existingUsernames = trainerDao.getExistingUsernames();
         String username = ProfileGenerationHelper.generateUsername(trainer.getFirstName(), trainer.getLastName(),
                 existingUsernames);
@@ -41,7 +42,7 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
-    public Trainer update(Long id, Trainer updatedTrainer, String username, String password) throws AuthenticationException {
+    public Trainer update(Long id, @NonNull Trainer updatedTrainer, String username, String password) throws AuthenticationException {
         if (authenticationService.authenticate(id, username, password)) {
             Optional<Trainer> existingTrainerOpt = trainerDao.findById(id);
             if (existingTrainerOpt.isPresent()) {

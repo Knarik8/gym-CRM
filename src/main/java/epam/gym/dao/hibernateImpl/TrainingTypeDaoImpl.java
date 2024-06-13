@@ -6,6 +6,7 @@ import epam.gym.entity.TrainingTypeEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+import lombok.NonNull;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,13 +17,13 @@ public class TrainingTypeDaoImpl implements TrainingTypeDao {
 
     @Override
     @Transactional
-    public TrainingTypeEntity create(TrainingTypeEntity trainingTypeEntity) {
+    public TrainingTypeEntity create(@NonNull TrainingTypeEntity trainingTypeEntity) {
         entityManager.persist(trainingTypeEntity);
         return trainingTypeEntity;
     }
 
     @Override
-    public TrainingTypeEntity findByName(TrainingType trainingType) {
+    public TrainingTypeEntity findByName(@NonNull TrainingType trainingType) {
         TypedQuery<TrainingTypeEntity> query = entityManager.createQuery(
                 "SELECT FROM training_type WHERE t.trainingTypeName = :name", TrainingTypeEntity.class);
         query.setParameter("name", trainingType);

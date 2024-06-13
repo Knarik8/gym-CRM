@@ -3,6 +3,7 @@ package epam.gym.service.hibernateImpl;
 import epam.gym.dao.TrainingDao;
 import epam.gym.entity.Training;
 import epam.gym.service.TrainingService;
+import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class TrainingServiceImpl implements TrainingService {
         this.trainingDao = trainingDao;
     }
     @Override
-    public Training create(Training training) {
+    public Training create(@NonNull Training training) {
         Training createdTraining = trainingDao.create(training);
         logger.info("Training created with ID: {}", createdTraining.getId());
         return createdTraining;    }

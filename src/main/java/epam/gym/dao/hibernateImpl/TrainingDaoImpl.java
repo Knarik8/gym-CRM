@@ -4,6 +4,7 @@ import epam.gym.dao.TrainingDao;
 import epam.gym.entity.Training;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import lombok.NonNull;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +18,7 @@ public class TrainingDaoImpl implements TrainingDao {
 
     @Override
     @Transactional
-    public Training create(Training training) {
+    public Training create(@NonNull Training training) {
         entityManager.persist(training);
         return training;
     }
