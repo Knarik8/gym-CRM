@@ -39,7 +39,6 @@ public class TrainerDaoImpl implements TrainerDao {
     }
 
     @Override
-    @Transactional
     public Optional<Trainer> findById(Long id) {
         return Optional.ofNullable(entityManager.find(Trainer.class, id));
     }
@@ -53,7 +52,6 @@ public class TrainerDaoImpl implements TrainerDao {
     }
 
     @Override
-    @Transactional
     public Optional<Trainer> selectTrainerByUsername(String username) {
         try {
             Trainer trainer = entityManager.createQuery("SELECT t FROM Trainer t LEFT JOIN FETCH t.trainings WHERE " +
@@ -89,7 +87,6 @@ public class TrainerDaoImpl implements TrainerDao {
     }
 
     @Override
-    @Transactional
     public List<Training> getTrainingsByTrainerUsernameAndTraineeName(String trainerUsername, String traineeName) {
         return entityManager.createQuery(
                         "SELECT tr FROM Training tr " +
@@ -102,7 +99,6 @@ public class TrainerDaoImpl implements TrainerDao {
     }
 
     @Override
-    @Transactional
     public List<Trainer> getUnassignedTrainersByTraineeUsername(String traineeUsername) {
         return entityManager.createQuery(
                         "SELECT t FROM Trainer t WHERE t.id NOT IN " +

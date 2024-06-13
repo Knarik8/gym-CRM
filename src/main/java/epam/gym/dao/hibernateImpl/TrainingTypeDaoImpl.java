@@ -22,7 +22,6 @@ public class TrainingTypeDaoImpl implements TrainingTypeDao {
     }
 
     @Override
-    @Transactional
     public TrainingTypeEntity selectByName(TrainingType trainingType) {
         TypedQuery<TrainingTypeEntity> query = entityManager.createQuery(
                 "SELECT FROM training_type WHERE t.trainingTypeName = :name", TrainingTypeEntity.class);
