@@ -1,17 +1,12 @@
 package epam.gym.util;
 
-import epam.gym.storage.InMemoryStorage;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.Set;
 
 public class ProfileGenerationHelper {
 
-    private final InMemoryStorage storage;
 
-    public ProfileGenerationHelper(InMemoryStorage storage) {
-        this.storage = storage;
-    }
     public static String generateUsername(String firstName, String lastName, Set<String> existingUsernames) {
 
         String baseUsername = firstName + "." + lastName;

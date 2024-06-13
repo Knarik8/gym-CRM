@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
-public class ProfileGenerationHelperTest {
+class ProfileGenerationHelperTest {
 
     private Set<String> existingUsernames;
 
