@@ -20,7 +20,7 @@ public interface TraineeDao {
 
     Set<String> getExistingUsernames();
 
-    Optional<Trainee> selectTraineeByUsername(String username);
+    Optional<Trainee> findTraineeByUsername(String username);
 
     Optional<Trainee> changePassword(Long id, String newPassword);
 

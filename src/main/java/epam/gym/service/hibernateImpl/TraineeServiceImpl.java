@@ -102,7 +102,7 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     public Optional<Trainee> selectTraineeByUsername(String username) {
-        Optional<Trainee> traineeOpt = traineeDao.selectTraineeByUsername(username);
+        Optional<Trainee> traineeOpt = traineeDao.findTraineeByUsername(username);
         if (traineeOpt.isPresent()) {
             logger.info("Found trainee with username: {}", username);
         } else {
@@ -164,7 +164,7 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     public boolean deleteTraineeByUsername(String username, String password) throws AuthenticationException {
-        Optional<Trainee> traineeOptional = traineeDao.selectTraineeByUsername(username);
+        Optional<Trainee> traineeOptional = traineeDao.findTraineeByUsername(username);
         if (traineeOptional.isPresent()) {
             Trainee trainee = traineeOptional.get();
             if (authenticationService.authenticate(trainee.getId(), username, password)) {

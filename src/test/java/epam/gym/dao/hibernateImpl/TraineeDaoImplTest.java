@@ -155,7 +155,7 @@ class TraineeDaoImplTest {
         when(query.setParameter("username", trainee.getUsername())).thenReturn(query);
         when(query.getSingleResult()).thenReturn(trainee);
 
-        Optional<Trainee> result = traineeDao.selectTraineeByUsername(trainee.getUsername());
+        Optional<Trainee> result = traineeDao.findTraineeByUsername(trainee.getUsername());
 
         assertTrue(result.isPresent());
         assertEquals(trainee, result.get());
@@ -171,7 +171,7 @@ class TraineeDaoImplTest {
         when(query.setParameter("username", trainee.getUsername())).thenReturn(query);
         when(query.getSingleResult()).thenThrow(new NoResultException());
 
-        Optional<Trainee> result = traineeDao.selectTraineeByUsername(trainee.getUsername());
+        Optional<Trainee> result = traineeDao.findTraineeByUsername(trainee.getUsername());
 
         assertFalse(result.isPresent());
         verify(entityManager).createQuery("SELECT t FROM Trainee t LEFT JOIN FETCH t.trainings WHERE t.username = :username", Trainee.class);

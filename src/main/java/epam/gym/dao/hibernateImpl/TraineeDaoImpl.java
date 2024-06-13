@@ -56,7 +56,7 @@ public class TraineeDaoImpl implements TraineeDao {
 
     @Override
     @Transactional
-    public Optional<Trainee> selectTraineeByUsername(String username) {
+    public Optional<Trainee> findTraineeByUsername(String username) {
         try {
             Trainee trainee = entityManager.createQuery("SELECT t FROM Trainee t LEFT JOIN FETCH t.trainings WHERE " +
                             "t.username = :username", Trainee.class)
@@ -93,7 +93,7 @@ public class TraineeDaoImpl implements TraineeDao {
     @Override
     @Transactional
     public boolean deleteByUsername(String username) {
-        Optional<Trainee> traineeOptional = selectTraineeByUsername(username);
+        Optional<Trainee> traineeOptional = findTraineeByUsername(username);
         if (traineeOptional.isPresent()) {
             entityManager.remove(traineeOptional.get());
             return true;
