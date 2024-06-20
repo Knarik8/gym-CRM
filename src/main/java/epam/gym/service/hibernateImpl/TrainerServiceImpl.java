@@ -94,22 +94,6 @@ public class TrainerServiceImpl implements TrainerService {
         return trainerOpt;
     }
 
-    @Override
-    public Optional<Trainer> changePassword(Long id, String username, String oldPassword, String newPassword) {
-        if (authenticationService.authenticate(id, username, oldPassword)) {
-            Optional<Trainer> updatedTrainer = trainerDao.changePassword(id, newPassword);
-            if (updatedTrainer.isPresent()) {
-                logger.info("Password changed successfully for trainer with ID: {}", id);
-            } else {
-                logger.warn("Failed to change password. Trainer with ID: {} not found", id);
-            }
-
-            return updatedTrainer;
-        } else {
-            logger.error("Authentication failed for user: {}", username);
-            throw new AuthenticationException("Authentication failed for user: " + username);
-        }
-    }
 
     @Override
     public void activateTrainer(Long id, String username, String password) {
@@ -164,4 +148,16 @@ public class TrainerServiceImpl implements TrainerService {
         List<Trainer> unassignedTrainers = trainerDao.getUnassignedTrainersByTraineeUsername(traineeUsername);
         logger.info("Retrieved unassigned trainers for traineeUsername: {}", traineeUsername);
         return unassignedTrainers;    }
+
+    @Override
+    public void setActiveStatus(String username, boolean isActive) {
+        Optional<Trainer> trainerOptional = findTrainerByUsername(username);
+        if (trainerOptional.isPresent()) {
+            Trainer trainer = trainerOptional.get();
+            trainerDao.setActiveStatus(trainer.getId(), isActive);
+        } else {
+            throw new RuntimeException("Trainer not found with username: " + username);
+        }
+    }
+
 }

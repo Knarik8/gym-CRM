@@ -66,17 +66,6 @@ public class TrainerDaoImpl implements TrainerDao {
         }
     }
 
-    @Override
-    @Transactional
-    public Optional<Trainer> changePassword(Long id, String newPassword) {
-        Trainer trainer = entityManager.find(Trainer.class, id);
-        if (trainer != null) {
-            trainer.setPassword(newPassword);
-            entityManager.merge(trainer);
-            return Optional.of(trainer);
-        }
-        return Optional.empty();
-    }
 
     @Override
     @Transactional
@@ -100,11 +89,13 @@ public class TrainerDaoImpl implements TrainerDao {
                 .getResultList();
     }
 
+
     @Override
     public List<Trainer> getUnassignedTrainersByTraineeUsername(String traineeUsername) {
         return entityManager.createQuery(
                         "SELECT t FROM Trainer t WHERE t.id NOT IN " +
-                                "(SELECT tr.trainer.id FROM Training tr WHERE tr.trainee.username = :traineeUsername)", Trainer.class)
+                                "(SELECT tr.trainer.id FROM Training tr WHERE tr.trainee.username = :traineeUsername)",
+                        Trainer.class)
                 .setParameter("traineeUsername", traineeUsername)
                 .getResultList();
     }

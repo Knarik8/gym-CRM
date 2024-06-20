@@ -109,31 +109,31 @@ public class TrainerDaoImplTest {
     }
 
 
-    @Test
-    void givenTrainerExisted_whenChangePassword_thenSuccess(){
-        String newPassword = "newPassword";
-        when(entityManager.find(Trainer.class, trainer.getId())).thenReturn(trainer);
-        when(entityManager.merge(trainer)).thenReturn(trainer);
-
-        Optional<Trainer> actualTrainer = trainerDao.changePassword(trainer.getId(), newPassword);
-
-        assertTrue(actualTrainer.isPresent());
-        assertEquals(newPassword, actualTrainer.get().getPassword());
-        verify(entityManager).find(Trainer.class, trainer.getId());
-        verify(entityManager).merge(trainer);
-    }
-
-    @Test
-    void givenTrainerNotExisted_whenChangePassword_thenNotFound(){
-        String newPassword = "newPassword";
-        when(entityManager.find(Trainer.class, trainer.getId())).thenReturn(null);
-
-        Optional<Trainer> actualTrainer = trainerDao.changePassword(trainer.getId(), newPassword);
-
-        assertFalse(actualTrainer.isPresent());
-        verify(entityManager).find(Trainer.class, trainer.getId());
-        verify(entityManager, never()).merge(any(Trainer.class));
-    }
+//    @Test
+//    void givenTrainerExisted_whenChangePassword_thenSuccess(){
+//        String newPassword = "newPassword";
+//        when(entityManager.find(Trainer.class, trainer.getId())).thenReturn(trainer);
+//        when(entityManager.merge(trainer)).thenReturn(trainer);
+//
+//        Optional<Trainer> actualTrainer = trainerDao.changePassword(trainer.getId(), newPassword);
+//
+//        assertTrue(actualTrainer.isPresent());
+//        assertEquals(newPassword, actualTrainer.get().getPassword());
+//        verify(entityManager).find(Trainer.class, trainer.getId());
+//        verify(entityManager).merge(trainer);
+//    }
+//
+//    @Test
+//    void givenTrainerNotExisted_whenChangePassword_thenNotFound(){
+//        String newPassword = "newPassword";
+//        when(entityManager.find(Trainer.class, trainer.getId())).thenReturn(null);
+//
+//        Optional<Trainer> actualTrainer = trainerDao.changePassword(trainer.getId(), newPassword);
+//
+//        assertFalse(actualTrainer.isPresent());
+//        verify(entityManager).find(Trainer.class, trainer.getId());
+//        verify(entityManager, never()).merge(any(Trainer.class));
+//    }
 
     @Test
     void givenTrainerExisted_whenSetActiveStatus_thenSuccess(){

@@ -19,8 +19,6 @@ public interface TrainerDao {
 
     Optional<Trainer> findTrainerByUsername(String username);
 
-    Optional<Trainer> changePassword(Long id, String newPassword);
-
     void setActiveStatus(Long id, boolean isActive);
 
     List<Training> getTrainingsByTrainerUsernameAndTraineeName(String trainerUsername, String traineeName);

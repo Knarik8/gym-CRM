@@ -1,6 +1,7 @@
 package epam.gym.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
@@ -30,11 +31,11 @@ public class Trainer extends User {
     @JoinColumn(name = "training_type_id")
     private TrainingTypeEntity specialization;
 
-    @ManyToMany(mappedBy = "trainers")
+    @ManyToMany(mappedBy = "trainers", fetch = FetchType.EAGER)
     @ToString.Exclude
     private Set<Trainee> trainees = new HashSet<>();
 
-    @OneToMany(mappedBy = "trainer")
+    @OneToMany(mappedBy = "trainer", fetch = FetchType.EAGER)
     private Set<Training> trainings = new HashSet<>();
 
 }

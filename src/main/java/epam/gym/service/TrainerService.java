@@ -16,8 +16,6 @@ public interface TrainerService {
 
     Optional<Trainer> findTrainerByUsername(String username);
 
-    Optional<Trainer> changePassword(Long id, String username, String oldPassword, String newPassword);
-
     void activateTrainer(Long id, String username, String password);
 
     void deactivateTrainer(Long id, String username, String password);
@@ -27,4 +25,7 @@ public interface TrainerService {
 
     List<Trainer> getUnassignedTrainersByTraineeUsername(String traineeUsername);
 
-    }
+    void setActiveStatus(String username, boolean isActive);
+
+
+}
