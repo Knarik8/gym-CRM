@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TrainingTypeServiceImpl implements TrainingTypeService {
     private static final Logger logger = LoggerFactory.getLogger(TrainingTypeServiceImpl.class);
@@ -35,6 +37,11 @@ public class TrainingTypeServiceImpl implements TrainingTypeService {
             logger.warn("Training type with name: {} not found", trainingType);
         }
         return trainingTypeEntity;
+    }
+
+    @Override
+    public List<TrainingTypeEntity> getAllTrainingTypes() {
+        return trainingTypeDao.getAllTrainingTypes();
     }
 
 }

@@ -10,6 +10,8 @@ import lombok.NonNull;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 public class TrainingTypeDaoImpl implements TrainingTypeDao {
     @PersistenceContext
@@ -30,4 +32,11 @@ public class TrainingTypeDaoImpl implements TrainingTypeDao {
         return query.getSingleResult();
 
     }
+
+    @Override
+    public List<TrainingTypeEntity> getAllTrainingTypes() {
+        TypedQuery<TrainingTypeEntity> query = entityManager.createQuery("SELECT t FROM TrainingTypeEntity t",
+                TrainingTypeEntity.class);
+            return query.getResultList();
+        }
 }
