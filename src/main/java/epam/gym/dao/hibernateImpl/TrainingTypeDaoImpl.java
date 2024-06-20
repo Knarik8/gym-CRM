@@ -27,7 +27,7 @@ public class TrainingTypeDaoImpl implements TrainingTypeDao {
     @Override
     public TrainingTypeEntity findByName(@NonNull TrainingType trainingType) {
         TypedQuery<TrainingTypeEntity> query = entityManager.createQuery(
-                "SELECT FROM training_type WHERE t.trainingTypeName = :name", TrainingTypeEntity.class);
+                "SELECT t FROM TrainingTypeEntity t WHERE t.trainingTypeName = :name", TrainingTypeEntity.class);
         query.setParameter("name", trainingType);
         return query.getSingleResult();
 
