@@ -3,6 +3,7 @@ package epam.gym.util;
 import epam.gym.entity.User;
 import epam.gym.exception.AuthenticationException;
 import epam.gym.service.UserService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,7 +13,7 @@ public class AuthenticationService {
 
     private UserService userService;
 
-    AuthenticationService(UserService userService){
+    AuthenticationService(@Lazy UserService userService){
         this.userService = userService;
     }
 
