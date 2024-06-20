@@ -1,5 +1,6 @@
 package epam.gym.service;
 
+import epam.gym.dto.trainer.TrainerDto;
 import epam.gym.entity.Trainee;
 import epam.gym.entity.Trainer;
 import epam.gym.entity.Training;
@@ -18,9 +19,7 @@ public interface TraineeService {
 
     void deleteTraineeById(Long id, String username, String password);
 
-    Optional<Trainee> selectTraineeByUsername(String username);
-
-    Optional<Trainee> changePassword(Long id, String username, String oldPassword, String newPassword);
+    Optional<Trainee> findByUsername(String username);
 
     void activateTrainee(Long id, String username, String password);
 
@@ -32,5 +31,11 @@ public interface TraineeService {
             String traineeUsername, String trainerName, Long traineeId, String traineePassword);
 
     Trainee updateTraineeTrainersList(Long traineeId, Set<Trainer> trainers);
+
+    void setActiveStatus(String username, boolean isActive);
+
+    List<Trainer> getNotAssignedTrainers(String traineeUsername);
+
+    List<TrainerDto> updateTraineeTrainers(String traineeUsername, List<String> trainerUsernames);
 
 }

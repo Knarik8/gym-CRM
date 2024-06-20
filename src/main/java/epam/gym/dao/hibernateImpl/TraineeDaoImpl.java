@@ -6,6 +6,7 @@ import epam.gym.entity.Trainer;
 import epam.gym.entity.Training;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import org.slf4j.Logger;
@@ -20,7 +21,7 @@ import java.util.Set;
 @Repository
 public class TraineeDaoImpl implements TraineeDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(TrainerDaoImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(TraineeDaoImpl.class);
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -72,17 +73,6 @@ public class TraineeDaoImpl implements TraineeDao {
         }
     }
 
-    @Override
-    @Transactional
-    public Optional<Trainee> changePassword(Long id, String newPassword) {
-        Trainee trainee = entityManager.find(Trainee.class, id);
-        if (trainee != null) {
-            trainee.setPassword(newPassword);
-            entityManager.merge(trainee);
-            return Optional.of(trainee);
-        }
-        return Optional.empty();
-    }
 
     @Override
     @Transactional
@@ -124,5 +114,21 @@ public class TraineeDaoImpl implements TraineeDao {
         trainee.setTrainers(trainers);
         entityManager.merge(trainee);
         return trainee;
+    }
+
+    @Override
+    public List<Trainer> getNotAssignedTrainers(String traineeUsername) {
+        String jpql = "SELECT t FROM Trainer t " +
+                "WHERE NOT EXISTS (" +
+                "   SELECT 1 FROM Training tr " +
+                "   WHERE tr.trainee.username = :traineeUsername " +
+                "   AND tr.trainer = t" +
+                ")";
+
+        TypedQuery<Trainer> query = entityManager.createQuery(jpql, Trainer.class);
+        query.setParameter("traineeUsername", traineeUsername);
+
+        return query.getResultList();
+
     }
 }

@@ -1,6 +1,8 @@
 package epam.gym.service.hibernateImpl;
 
 import epam.gym.dao.TraineeDao;
+import epam.gym.dao.TrainerDao;
+import epam.gym.dto.trainer.TrainerDto;
 import epam.gym.entity.Trainee;
 import epam.gym.entity.Trainer;
 import epam.gym.entity.Training;
@@ -12,6 +14,8 @@ import lombok.NonNull;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -23,11 +27,13 @@ public class TraineeServiceImpl implements TraineeService {
     private static final Logger logger = LoggerFactory.getLogger(TraineeServiceImpl.class);
 
     private final TraineeDao traineeDao;
+    private final TrainerDao trainerDao;
     private final AuthenticationService authenticationService;
 
-    public TraineeServiceImpl(TraineeDao traineeDao, AuthenticationService authenticationService) {
+    public TraineeServiceImpl(TraineeDao traineeDao, AuthenticationService authenticationService, TrainerDao trainerDao) {
         this.traineeDao = traineeDao;
         this.authenticationService = authenticationService;
+        this.trainerDao = trainerDao;
     }
 
     @Override
@@ -102,7 +108,7 @@ public class TraineeServiceImpl implements TraineeService {
     }
 
     @Override
-    public Optional<Trainee> selectTraineeByUsername(String username) {
+    public Optional<Trainee> findByUsername(String username) {
         Optional<Trainee> traineeOpt = traineeDao.findTraineeByUsername(username);
         if (traineeOpt.isPresent()) {
             logger.info("Found trainee with username: {}", username);
@@ -110,22 +116,6 @@ public class TraineeServiceImpl implements TraineeService {
             logger.warn("Failed to find trainee with username: {}", username);
         }
         return traineeOpt;
-    }
-
-    @Override
-    public Optional<Trainee> changePassword(Long id, String username, String oldPassword, String newPassword) {
-        if (authenticationService.authenticate(id, username, oldPassword)) {
-            Optional<Trainee> updatedTrainee = traineeDao.changePassword(id, newPassword);
-            if (updatedTrainee.isPresent()) {
-                logger.info("Password changed successfully for trainee with ID: {}", id);
-            } else {
-                logger.warn("Failed to change password. Trainee with ID: {} not found.", id);
-            }
-            return updatedTrainee;
-        } else {
-            logger.error("Authentication failed for user: {}", username);
-            throw new AuthenticationException("Authentication failed for user: " + username);
-        }
     }
 
 
@@ -201,5 +191,51 @@ public class TraineeServiceImpl implements TraineeService {
         logger.info("Updated trainers list for trainee with ID: {}", traineeId);
         return updatedTrainee;    }
 
+    @Override
+    public void setActiveStatus(String username, boolean isActive) {
+        Optional<Trainee> traineeOptional = findByUsername(username);
+        if (traineeOptional.isPresent()) {
+            Trainee trainee = traineeOptional.get();
+            traineeDao.setActiveStatus(trainee.getId(), isActive);
+        } else {
+            throw new RuntimeException("Trainee not found with username: " + username);
+        }
+    }
+
+    @Override
+    public List<Trainer> getNotAssignedTrainers(String traineeUsername) {
+        return traineeDao.getNotAssignedTrainers(traineeUsername);
+    }
+
+    @Override
+    public List<TrainerDto> updateTraineeTrainers(String traineeUsername, List<String> trainerUsernames) {
+        Optional<Trainee> traineeOptional = traineeDao.findTraineeByUsername(traineeUsername);
+        if (!traineeOptional.isPresent()) {
+            throw new IllegalArgumentException("Trainee not found");
+        }
+
+        Set<Trainer> trainers = new HashSet<>();
+        for (String trainerUsername : trainerUsernames) {
+            Optional<Trainer> trainer = trainerDao.findTrainerByUsername(trainerUsername);
+            if (!trainer.isPresent()) {
+                throw new IllegalArgumentException("Trainer not found: " + trainerUsername);
+            }
+            trainers.add(trainer.get());
+        }
+
+        traineeOptional.get().setTrainers(trainers);
+        traineeDao.create(traineeOptional.get());
+
+        List<TrainerDto> trainerDtos = new ArrayList<>();
+        for (Trainer trainer : trainers) {
+            TrainerDto dto = new TrainerDto();
+            dto.setUsername(trainer.getUsername());
+            dto.setFirstName(trainer.getFirstName());
+            dto.setLastName(trainer.getLastName());
+            dto.setSpecialization(trainer.getSpecialization());
+            trainerDtos.add(dto);
+        }
+        return trainerDtos;
+    }
 
 }

@@ -1,5 +1,6 @@
 package epam.gym.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -30,6 +31,7 @@ import java.util.Set;
 @SuperBuilder
 public class Trainee extends User {
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
 
@@ -37,7 +39,7 @@ public class Trainee extends User {
     @ToString.Exclude
     private Address address;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "training",
             joinColumns = @JoinColumn(name = "trainee_id"),

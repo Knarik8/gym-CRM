@@ -177,31 +177,31 @@ class TraineeDaoImplTest {
         verify(entityManager).createQuery("SELECT t FROM Trainee t LEFT JOIN FETCH t.trainings WHERE t.username = :username", Trainee.class);
     }
 
-    @Test
-    void givenTraineeExisted_whenChangePassword_thenSuccess(){
-        String newPassword = "newPassword";
-        when(entityManager.find(Trainee.class, trainee.getId())).thenReturn(trainee);
-        when(entityManager.merge(trainee)).thenReturn(trainee);
-
-        Optional<Trainee> actualTrainee = traineeDao.changePassword(trainee.getId(), newPassword);
-
-        assertTrue(actualTrainee.isPresent());
-        assertEquals(newPassword, actualTrainee.get().getPassword());
-        verify(entityManager).find(Trainee.class, trainee.getId());
-        verify(entityManager).merge(trainee);
-    }
-
-    @Test
-    void givenTraineeNotExisted_whenChangePassword_thenNotFound(){
-        String newPassword = "newPassword";
-        when(entityManager.find(Trainee.class, trainee.getId())).thenReturn(null);
-
-        Optional<Trainee> actualTrainee = traineeDao.changePassword(trainee.getId(), newPassword);
-
-        assertFalse(actualTrainee.isPresent());
-        verify(entityManager).find(Trainee.class, trainee.getId());
-        verify(entityManager, never()).merge(any(Trainee.class));
-    }
+//    @Test
+//    void givenTraineeExisted_whenChangePassword_thenSuccess(){
+//        String newPassword = "newPassword";
+//        when(entityManager.find(Trainee.class, trainee.getId())).thenReturn(trainee);
+//        when(entityManager.merge(trainee)).thenReturn(trainee);
+//
+//        Optional<Trainee> actualTrainee = traineeDao.changePassword(trainee.getId(), newPassword);
+//
+//        assertTrue(actualTrainee.isPresent());
+//        assertEquals(newPassword, actualTrainee.get().getPassword());
+//        verify(entityManager).find(Trainee.class, trainee.getId());
+//        verify(entityManager).merge(trainee);
+//    }
+//
+//    @Test
+//    void givenTraineeNotExisted_whenChangePassword_thenNotFound(){
+//        String newPassword = "newPassword";
+//        when(entityManager.find(Trainee.class, trainee.getId())).thenReturn(null);
+//
+//        Optional<Trainee> actualTrainee = traineeDao.changePassword(trainee.getId(), newPassword);
+//
+//        assertFalse(actualTrainee.isPresent());
+//        verify(entityManager).find(Trainee.class, trainee.getId());
+//        verify(entityManager, never()).merge(any(Trainee.class));
+//    }
 
     @Test
     void givenTraineeExisted_whenSetActiveStatus_thenSuccess(){

@@ -22,8 +22,6 @@ public interface TraineeDao {
 
     Optional<Trainee> findTraineeByUsername(String username);
 
-    Optional<Trainee> changePassword(Long id, String newPassword);
-
     void setActiveStatus(Long id, boolean isActive);
 
     boolean deleteByUsername(String username);
@@ -31,5 +29,8 @@ public interface TraineeDao {
     List<Training> getTrainingsByTraineeUsernameAndTrainerName(String traineeUsername, String trainerName);
 
     Trainee updateTraineeTrainersList(Long traineeId, Set<Trainer> trainers);
+
+    List<Trainer> getNotAssignedTrainers(String traineeUsername);
+
 
 }
