@@ -1,12 +1,12 @@
 package epam.gym.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 @Configuration
-@Import(CommonConfig.class)
+@ComponentScan(basePackages = "epam.gym")
 public class AppConfig {
 
     @Bean
