@@ -4,6 +4,7 @@ import epam.gym.dao.UserDao;
 import epam.gym.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -21,5 +22,18 @@ public class UserDaoImpl implements UserDao {
                 .getSingleResult();
         return Optional.of(user);
 
+    }
+
+
+    @Override
+    @Transactional
+    public Optional<User> changePassword(Long id, String newPassword) {
+        User user = entityManager.find(User.class, id);
+        if (user != null) {
+            user.setPassword(newPassword);
+            entityManager.merge(user);
+            return Optional.of(user);
+        }
+        return Optional.empty();
     }
 }
