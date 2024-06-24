@@ -1,10 +1,31 @@
 package epam.gym.service;
 
 import epam.gym.entity.Trainer;
+import epam.gym.entity.Training;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface TrainerService {
 
-    Trainer createTrainer(Trainer trainer);
-    Trainer updateTrainerById(Long id, Trainer trainer);
-    Trainer selectTrainerById(Long id);
+    Trainer create(Trainer trainer);
+
+    Trainer update(Long id, Trainer updatedTrainer, String username, String password);
+
+    Optional<Trainer> findById(long id, String username, String password);
+
+    Optional<Trainer> findTrainerByUsername(String username);
+
+    void activateTrainer(Long id, String username, String password);
+
+    void deactivateTrainer(Long id, String username, String password);
+
+    List<Training> getTrainingsByTrainerUsernameAndTraineeName(
+            String trainerUsername, String traineeName, Long trainerId, String trainerPassword);
+
+    List<Trainer> getUnassignedTrainersByTraineeUsername(String traineeUsername);
+
+    void setActiveStatus(String username, boolean isActive);
+
+
 }
