@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/training-types")
+@RequestMapping("/training-types")
 public class TrainingTypeController {
 
     private TrainingTypeService trainingTypeService;

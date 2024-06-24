@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 @RestController
-@RequestMapping("/api/trainees")
+@RequestMapping("/trainees")
 public class TraineeController {
 
     private TraineeService traineeService;
