@@ -62,10 +62,11 @@ public class TraineeDaoImpl implements TraineeDao {
     @Override
     public Optional<Trainee> findTraineeByUsername(String username) {
         try {
-            Trainee trainee = entityManager.createQuery("SELECT t FROM Trainee t LEFT JOIN FETCH t.trainings WHERE " +
-                            "t.username = :username", Trainee.class)
-                    .setParameter("username", username)
-                    .getSingleResult();
+            TypedQuery<Trainee> query = entityManager.createQuery(
+                    "SELECT t FROM Trainee t LEFT JOIN FETCH t.trainings WHERE t.username = :username", Trainee.class
+            );
+            query.setParameter("username", username);
+            Trainee trainee = query.getSingleResult();
             return Optional.of(trainee);
         } catch (Exception e) {
             logger.error("Error finding trainee by username: {}", username, e);

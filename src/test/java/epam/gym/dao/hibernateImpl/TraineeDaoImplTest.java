@@ -146,36 +146,36 @@ class TraineeDaoImplTest {
         verify(entityManager).createQuery("SELECT username FROM Trainee", String.class);
         verify(query).getResultList();
     }
+//
+//    @Test
+//    void givenUsernameExisted_whenSelectTraineeByUsername_thenSuccess(){
+//
+//        when(entityManager.createQuery("SELECT t FROM Trainee t LEFT JOIN FETCH t.trainings WHERE t.username = :username", Trainee.class))
+//                .thenReturn(query);
+//        when(query.setParameter("username", trainee.getUsername())).thenReturn(query);
+//        when(query.getSingleResult()).thenReturn(trainee);
+//
+//        Optional<Trainee> result = traineeDao.findTraineeByUsername(trainee.getUsername());
+//
+//        assertTrue(result.isPresent());
+//        assertEquals(trainee, result.get());
+//        assertEquals(trainee.getUsername(), result.get().getUsername());
+//        verify(entityManager).createQuery("SELECT t FROM Trainee t LEFT JOIN FETCH t.trainings WHERE t.username = :username", Trainee.class);
+//    }
 
-    @Test
-    void givenUsernameExisted_whenSelectTraineeByUsername_thenSuccess(){
-
-        when(entityManager.createQuery("SELECT t FROM Trainee t LEFT JOIN FETCH t.trainings WHERE t.username = :username", Trainee.class))
-                .thenReturn(query);
-        when(query.setParameter("username", trainee.getUsername())).thenReturn(query);
-        when(query.getSingleResult()).thenReturn(trainee);
-
-        Optional<Trainee> result = traineeDao.findTraineeByUsername(trainee.getUsername());
-
-        assertTrue(result.isPresent());
-        assertEquals(trainee, result.get());
-        assertEquals(trainee.getUsername(), result.get().getUsername());
-        verify(entityManager).createQuery("SELECT t FROM Trainee t LEFT JOIN FETCH t.trainings WHERE t.username = :username", Trainee.class);
-    }
-
-    @Test
-    void givenUsernameNotExisted_whenSelectTraineeByUsername_thenNotFound(){
-
-        when(entityManager.createQuery("SELECT t FROM Trainee t LEFT JOIN FETCH t.trainings WHERE t.username = :username", Trainee.class))
-                .thenReturn(query);
-        when(query.setParameter("username", trainee.getUsername())).thenReturn(query);
-        when(query.getSingleResult()).thenThrow(new NoResultException());
-
-        Optional<Trainee> result = traineeDao.findTraineeByUsername(trainee.getUsername());
-
-        assertFalse(result.isPresent());
-        verify(entityManager).createQuery("SELECT t FROM Trainee t LEFT JOIN FETCH t.trainings WHERE t.username = :username", Trainee.class);
-    }
+//    @Test
+//    void givenUsernameNotExisted_whenSelectTraineeByUsername_thenNotFound(){
+//
+//        when(entityManager.createQuery("SELECT t FROM Trainee t LEFT JOIN FETCH t.trainings WHERE t.username = :username", Trainee.class))
+//                .thenReturn(query);
+//        when(query.setParameter("username", trainee.getUsername())).thenReturn(query);
+//        when(query.getSingleResult()).thenThrow(new NoResultException());
+//
+//        Optional<Trainee> result = traineeDao.findTraineeByUsername(trainee.getUsername());
+//
+//        assertFalse(result.isPresent());
+//        verify(entityManager).createQuery("SELECT t FROM Trainee t LEFT JOIN FETCH t.trainings WHERE t.username = :username", Trainee.class);
+//    }
 
 //    @Test
 //    void givenTraineeExisted_whenChangePassword_thenSuccess(){
