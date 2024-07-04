@@ -3,6 +3,7 @@ package epam.gym.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
@@ -56,6 +57,7 @@ public class JPAConfig {
         return em;
     }
 
+    @Profile("dev")
     @Bean
     public DataSource dataSource() {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -76,7 +78,7 @@ public class JPAConfig {
     }
 
     @Bean
-    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
+    public static PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
 
         return new PersistenceExceptionTranslationPostProcessor();
     }
@@ -96,6 +98,7 @@ public class JPAConfig {
         initializer.setDatabasePopulator(databasePopulator());
         return initializer;
     }
+
 
     private ResourceDatabasePopulator databasePopulator() {
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();

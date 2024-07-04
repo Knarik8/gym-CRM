@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/user/")
+@RequestMapping("/user")
 public class LoginController {
     private AuthenticationService authenticationService;
     private UserService userService;

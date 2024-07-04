@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/trainers")
+@RequestMapping("/trainers")
 public class TrainerController {
 
     private TrainerService trainerService;

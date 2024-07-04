@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/trainings")
+@RequestMapping("/trainings")
 public class TrainingController {
 
     private TrainingService trainingService;
