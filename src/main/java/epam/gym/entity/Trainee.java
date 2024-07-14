@@ -1,6 +1,8 @@
 package epam.gym.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -21,7 +23,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -37,6 +39,7 @@ public class Trainee extends User {
 
     @OneToOne(mappedBy = "trainee", cascade = CascadeType.ALL)
     @ToString.Exclude
+    @JsonManagedReference
     private Address address;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -46,9 +49,10 @@ public class Trainee extends User {
             inverseJoinColumns = @JoinColumn(name = "trainer_id")
     )
     @ToString.Exclude
+    @JsonIgnore
     private Set<Trainer> trainers = new HashSet<>();
 
     @OneToMany(mappedBy = "trainee", fetch = FetchType.EAGER)
+    @JsonIgnore
     private Set<Training> trainings = new HashSet<>();
-
 }

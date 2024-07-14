@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import java.time.Duration;
 import java.util.Set;
@@ -22,6 +23,7 @@ import java.util.Set;
 @Entity
 @Table(name = "training")
 @Builder
+@EqualsAndHashCode
 public class Training {
 
     @Id
