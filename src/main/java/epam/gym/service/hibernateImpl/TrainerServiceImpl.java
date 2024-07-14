@@ -3,13 +3,12 @@ package epam.gym.service.hibernateImpl;
 import epam.gym.dao.TrainerDao;
 import epam.gym.entity.Trainer;
 import epam.gym.entity.Training;
-import epam.gym.exception.AuthenticationException;
 import epam.gym.service.TrainerService;
-import epam.gym.util.AuthenticationService;
 import epam.gym.util.ProfileGenerationHelper;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,11 +20,13 @@ public class TrainerServiceImpl implements TrainerService {
     private static final Logger logger = LoggerFactory.getLogger(TrainerServiceImpl.class);
 
     private TrainerDao trainerDao;
-    private AuthenticationService authenticationService;
+    private final PasswordEncoder passwordEncoder;
 
-    public TrainerServiceImpl(TrainerDao trainerDaoImpl, AuthenticationService authenticationService){
+
+    public TrainerServiceImpl(TrainerDao trainerDaoImpl, PasswordEncoder
+                              passwordEncoder){
         this.trainerDao = trainerDaoImpl;
-        this.authenticationService = authenticationService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -33,7 +34,9 @@ public class TrainerServiceImpl implements TrainerService {
         Set<String> existingUsernames = trainerDao.getExistingUsernames();
         String username = ProfileGenerationHelper.generateUsername(trainer.getFirstName(), trainer.getLastName(),
                 existingUsernames);
-        String password = ProfileGenerationHelper.generatePassword();
+        String generatedPassword = ProfileGenerationHelper.generatePassword();
+        String password = passwordEncoder.encode(generatedPassword);
+
         trainer.setUsername(username);
         trainer.setPassword(password);
         Trainer createdTrainer = trainerDao.create(trainer);
@@ -43,7 +46,6 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public Trainer update(Long id, @NonNull Trainer updatedTrainer, String username, String password) {
-        if (authenticationService.authenticate(id, username, password)) {
             Optional<Trainer> existingTrainerOpt = trainerDao.findById(id);
             if (existingTrainerOpt.isPresent()) {
                 Trainer existingTrainer = existingTrainerOpt.get();
@@ -52,7 +54,7 @@ public class TrainerServiceImpl implements TrainerService {
                 existingTrainer.setSpecialization(updatedTrainer.getSpecialization());
                 existingTrainer.setTrainees(updatedTrainer.getTrainees());
                 existingTrainer.setTrainings(updatedTrainer.getTrainings());
-                existingTrainer.setActive(true);
+                existingTrainer.setEnabled(true);
                 Trainer updated = trainerDao.update(existingTrainer);
                 logger.info("Updated trainer with ID: {}", id);
                 return updated;
@@ -60,15 +62,10 @@ public class TrainerServiceImpl implements TrainerService {
                 logger.error("Trainer not found with ID: {}", id);
                 throw new IllegalArgumentException("Trainer not found");
             }
-        } else {
-            logger.error("Authentication failed for user: {}", username);
-            throw new AuthenticationException("Authentication failed for user: " + username);
-        }
     }
 
     @Override
     public Optional<Trainer> findById(long id, String username, String password) {
-        if (authenticationService.authenticate(id, username, password)) {
             Optional<Trainer> existingTrainerOpt = trainerDao.findById(id);
             if (existingTrainerOpt.isPresent()) {
                 logger.info("Found trainer with ID: {}", id);
@@ -76,10 +73,6 @@ public class TrainerServiceImpl implements TrainerService {
             } else {
                 logger.warn("Trainer with ID: {} not found.", id);
             }
-        } else {
-            logger.error("Authentication failed for user: {}", username);
-            throw new AuthenticationException("Authentication failed for user: " + username);
-        }
         return Optional.empty();
     }
     @Override
@@ -97,7 +90,6 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public void activateTrainer(Long id, String username, String password) {
-        if (authenticationService.authenticate(id, username, password)) {
             Optional<Trainer> trainerOpt = findById(id, username, password);
             if (trainerOpt.isPresent()) {
                 trainerDao.setActiveStatus(id, true);
@@ -106,15 +98,10 @@ public class TrainerServiceImpl implements TrainerService {
                 logger.error("Trainer not found with ID: {}", id);
                 throw new IllegalArgumentException("Trainer not found");
             }
-        } else {
-            logger.error("Authentication failed for user: {}", username);
-            throw new AuthenticationException("Authentication failed for user: " + username);
-        }
     }
 
     @Override
     public void deactivateTrainer(Long id, String username, String password) {
-        if (authenticationService.authenticate(id, username, password)) {
             Optional<Trainer> trainerOpt = findById(id, username, password);
             if (trainerOpt.isPresent()) {
                 trainerDao.setActiveStatus(id, false);
@@ -123,23 +110,14 @@ public class TrainerServiceImpl implements TrainerService {
                 logger.error("Trainer not found with ID: {}", id);
                 throw new IllegalArgumentException("Trainer not found");
             }
-        } else {
-            logger.error("Authentication failed for user: {}", username);
-            throw new AuthenticationException("Authentication failed for user: " + username);
-        }
     }
 
     @Override
     public List<Training> getTrainingsByTrainerUsernameAndTraineeName(String trainerUsername, String traineeName,
                                                                       Long trainerId, String trainerPassword) {
-        if (authenticationService.authenticate(trainerId, trainerUsername, trainerPassword)) {
             List<Training> trainings = trainerDao.getTrainingsByTrainerUsernameAndTraineeName(trainerUsername, traineeName);
             logger.info("Retrieved trainings for trainerUsername: {} and traineeName: {}", trainerUsername, traineeName);
             return trainings;
-        } else {
-            logger.error("Authentication failed for trainer: {}", trainerUsername);
-            throw new AuthenticationException("Authentication failed for trainer: " + trainerUsername);
-        }
     }
 
     @Override

@@ -8,10 +8,10 @@ import epam.gym.entity.Trainer;
 import epam.gym.entity.Training;
 import epam.gym.exception.AuthenticationException;
 import epam.gym.service.TraineeService;
-import epam.gym.util.AuthenticationService;
 import epam.gym.util.ProfileGenerationHelper;
 import lombok.NonNull;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,12 +28,12 @@ public class TraineeServiceImpl implements TraineeService {
 
     private final TraineeDao traineeDao;
     private final TrainerDao trainerDao;
-    private final AuthenticationService authenticationService;
+    private final PasswordEncoder passwordEncoder;
 
-    public TraineeServiceImpl(TraineeDao traineeDao, AuthenticationService authenticationService, TrainerDao trainerDao) {
+    public TraineeServiceImpl(TraineeDao traineeDao, TrainerDao trainerDao, PasswordEncoder passwordEncoder) {
         this.traineeDao = traineeDao;
-        this.authenticationService = authenticationService;
         this.trainerDao = trainerDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -43,7 +43,8 @@ public class TraineeServiceImpl implements TraineeService {
         String username = ProfileGenerationHelper.generateUsername(trainee.getFirstName(), trainee.getLastName(),
                 existingUsernames);
         logger.info("Generated username: {}", username);
-        String password = ProfileGenerationHelper.generatePassword();
+        String generatedPassword = ProfileGenerationHelper.generatePassword();
+        String password = passwordEncoder.encode(generatedPassword);
         trainee.setUsername(username);
         trainee.setPassword(password);
         Trainee createdTrainee = traineeDao.create(trainee);
@@ -53,8 +54,6 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     public Trainee update(Long id, @NonNull Trainee updatedTrainee, String username, String password) {
-        logger.info("Attempting to update trainee with ID: {}, by user: {}", id, username);
-        if (authenticationService.authenticate(id, username, password)) {
             Optional<Trainee> existingTraineeOpt = traineeDao.findById(id);
             if (existingTraineeOpt.isPresent()) {
                 logger.info("Found existing trainee with ID: {}", id);
@@ -71,16 +70,11 @@ public class TraineeServiceImpl implements TraineeService {
                 logger.warn("Trainee with ID: {} not found", id);
                 throw new IllegalArgumentException("Trainee not found");
             }
-        } else {
-            logger.error("Authentication failed for user: {}", username);
-            throw new AuthenticationException("Authentication failed for user: " + username);
-        }
     }
 
     @Override
     public Optional<Trainee> findById(long id, String username, String password) {
         logger.info("Attempting to find trainee with ID: {}, by user: {}", id, username);
-        if (authenticationService.authenticate(id, username, password)) {
             Optional<Trainee> existingTraineeOpt = traineeDao.findById(id);
             if (existingTraineeOpt.isPresent()) {
                 logger.info("Found trainee with ID: {}", id);
@@ -88,23 +82,14 @@ public class TraineeServiceImpl implements TraineeService {
             } else {
                 logger.warn("Failed to select trainee. Trainee with ID: {} not found.", id);
             }
-        } else {
-            logger.error("Authentication failed for user: {}", username);
-            throw new AuthenticationException("Authentication failed for user: " + username);
-        }
         return Optional.empty();
     }
 
     @Override
     public void deleteTraineeById(Long id, String username, String password) {
         logger.info("Attempting to delete trainee with ID: {}, by user: {}", id, username);
-        if (authenticationService.authenticate(id, username, password)) {
             traineeDao.deleteById(id);
             logger.info("Deleted trainee with ID: {}", id);
-        } else {
-            logger.error("Authentication failed for user: {}", username);
-            throw new AuthenticationException("Authentication failed for user: " + username);
-        }
     }
 
     @Override
@@ -121,7 +106,6 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     public void activateTrainee(Long id, String username, String password) {
-        if (authenticationService.authenticate(id, username, password)) {
             Optional<Trainee> traineeOpt = findById(id, username, password);
             if (traineeOpt.isPresent()) {
                 traineeDao.setActiveStatus(id, true);
@@ -130,15 +114,12 @@ public class TraineeServiceImpl implements TraineeService {
                 logger.error("Trainee not found with ID: {}", id);
                 throw new IllegalArgumentException("Trainee not found");
             }
-        } else {
             logger.error("Authentication failed for user: {}", username);
             throw new AuthenticationException("Authentication failed for user: " + username);
-        }
     }
 
     @Override
     public void deactivateTrainee(Long id, String username, String password) {
-        if (authenticationService.authenticate(id, username, password)) {
             Optional<Trainee> traineeOpt = findById(id, username, password);
             if (traineeOpt.isPresent()) {
                 traineeDao.setActiveStatus(id, false);
@@ -147,25 +128,19 @@ public class TraineeServiceImpl implements TraineeService {
                 logger.error("Trainee not found with ID: {}", id);
                 throw new IllegalArgumentException("Trainee not found");
             }
-        } else {
             logger.error("Authentication failed for user: {}", username);
             throw new AuthenticationException("Authentication failed for user: " + username);
-        }
+
     }
 
     @Override
     public boolean deleteTraineeByUsername(String username, String password) {
         Optional<Trainee> traineeOptional = traineeDao.findTraineeByUsername(username);
         if (traineeOptional.isPresent()) {
-            Trainee trainee = traineeOptional.get();
-            if (authenticationService.authenticate(trainee.getId(), username, password)) {
+//            Trainee trainee = traineeOptional.get();
                 boolean result = traineeDao.deleteByUsername(username);
                 logger.info("Deleted trainee with username: {}", username);
                 return result;
-            } else {
-                logger.error("Authentication failed for user: {}", username);
-                throw new AuthenticationException("Authentication failed for user: " + username);
-            }
         } else {
             logger.error("Trainee not found with username: {}", username);
             throw new IllegalArgumentException("Trainee not found");
@@ -175,14 +150,10 @@ public class TraineeServiceImpl implements TraineeService {
     @Override
     public List<Training> getTrainingsByTraineeUsernameAndTrainerName(String traineeUsername, String trainerName,
                                                                       Long traineeId, String traineePassword) {
-        if (authenticationService.authenticate(traineeId, traineeUsername, traineePassword)) {
             List<Training> trainings = traineeDao.getTrainingsByTraineeUsernameAndTrainerName(traineeUsername, trainerName);
             logger.info("Retrieved trainings for traineeUsername: {} and trainerName: {}", traineeUsername, trainerName);
             return trainings;
-        } else {
-            logger.error("Authentication failed for user: {}", traineeUsername);
-            throw new AuthenticationException("Authentication failed for user: " + traineeUsername);
-        }
+
     }
 
     @Override
