@@ -80,7 +80,7 @@ public class TraineeDaoImpl implements TraineeDao {
     public void setActiveStatus(Long id, boolean isActive) {
         Trainee trainee = entityManager.find(Trainee.class, id);
         if (trainee != null) {
-            trainee.setActive(isActive);
+            trainee.setEnabled(isActive);
             entityManager.merge(trainee);
         }
     }

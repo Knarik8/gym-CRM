@@ -16,7 +16,6 @@ import lombok.experimental.SuperBuilder;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-//@MappedSuperclass
 @SuperBuilder
 @Entity
 @Table(name = "users")
@@ -39,7 +38,8 @@ public abstract class User {
     @Column
     private String password;
 
-    @Column
-    private boolean isActive;
+    @Column(name = "enabled")
+    private boolean isEnabled;
+
 
 }

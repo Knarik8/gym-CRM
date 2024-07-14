@@ -43,7 +43,7 @@ class UserServiceImplTest {
                 .lastName("Fof")
                 .username("username")
                 .password("password")
-                .isActive(true)
+                .isEnabled(true)
                 .dateOfBirth(LocalDate.of(1993, 2, 4))
                 .build();
 

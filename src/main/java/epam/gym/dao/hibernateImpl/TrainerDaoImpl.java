@@ -72,7 +72,7 @@ public class TrainerDaoImpl implements TrainerDao {
     public void setActiveStatus(Long id, boolean isActive) {
         Trainer trainer = entityManager.find(Trainer.class, id);
         if (trainer != null) {
-            trainer.setActive(isActive);
+            trainer.setEnabled(isActive);
             entityManager.merge(trainer);
         }
     }

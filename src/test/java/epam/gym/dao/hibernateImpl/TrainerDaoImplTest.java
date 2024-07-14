@@ -55,7 +55,7 @@ public class TrainerDaoImplTest {
                 .lastName("Petrov")
                 .username(null)
                 .password(null)
-                .isActive(true)
+                .isEnabled(true)
                 .specialization(trainingTypeEntity)
                 .build();
 
@@ -77,7 +77,7 @@ public class TrainerDaoImplTest {
                 .lastName("Petrova")
                 .username(null)
                 .password(null)
-                .isActive(true)
+                .isEnabled(true)
                 .specialization(trainingTypeEntity)
                 .build();
         when(entityManager.merge(trainer)).thenReturn(updatedTrainer);
@@ -145,7 +145,7 @@ public class TrainerDaoImplTest {
 
         verify(entityManager).find(Trainer.class, trainer.getId());
         verify(entityManager).merge(trainer);
-        assertEquals(isActive, trainer.isActive());
+        assertEquals(isActive, trainer.isEnabled());
     }
 
     @Test

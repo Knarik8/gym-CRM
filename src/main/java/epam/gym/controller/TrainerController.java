@@ -61,7 +61,7 @@ public class TrainerController {
         response.put("firstName", trainer.getFirstName());
         response.put("lastName", trainer.getLastName());
         response.put("trainingType", trainer.getSpecialization().getTrainingTypeName());
-        response.put("isActive", trainer.isActive());
+        response.put("isActive", trainer.isEnabled());
 
         List<Map<String, Object>> traineesList = new ArrayList<>();
         for (Trainee trainee : trainer.getTrainees()) {
@@ -88,7 +88,7 @@ public class TrainerController {
         response.put("lastName", updatedTrainer.getLastName());
         response.put("username", updatedTrainer.getUsername());
         response.put("trainingType", updatedTrainer.getSpecialization().getTrainingTypeName());
-        response.put("isActive", updatedTrainer.isActive());
+        response.put("isActive", updatedTrainer.isEnabled());
 
         List<Map<String, Object>> traineesList = new ArrayList<>();
         if (updatedTrainer.getTrainees() != null) {

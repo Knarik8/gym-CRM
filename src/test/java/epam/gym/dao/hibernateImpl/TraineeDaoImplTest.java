@@ -51,7 +51,7 @@ class TraineeDaoImplTest {
                 .lastName("Fof")
                 .username(null)
                 .password(null)
-                .isActive(true)
+                .isEnabled(true)
                 .dateOfBirth(LocalDate.of(1993, 2, 4))
                 .build();
 
@@ -81,7 +81,7 @@ class TraineeDaoImplTest {
                 .lastName("Ivanova")
                 .username(trainee.getUsername())
                 .password(trainee.getPassword())
-                .isActive(true)
+                .isEnabled(true)
                 .dateOfBirth(LocalDate.of(1993,7,7))
                 .address(address)
                 .build();
@@ -213,7 +213,7 @@ class TraineeDaoImplTest {
 
         verify(entityManager).find(Trainee.class, trainee.getId());
         verify(entityManager).merge(trainee);
-        assertEquals(isActive, trainee.isActive());
+        assertEquals(isActive, trainee.isEnabled());
     }
 
     @Test

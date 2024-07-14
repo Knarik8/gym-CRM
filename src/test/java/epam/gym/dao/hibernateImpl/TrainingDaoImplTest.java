@@ -53,7 +53,7 @@ public class TrainingDaoImplTest {
                 .lastName("Fof")
                 .username(null)
                 .password(null)
-                .isActive(true)
+                .isEnabled(true)
                 .dateOfBirth(LocalDate.of(1993, 2, 4))
                 .build();
 
@@ -75,7 +75,7 @@ public class TrainingDaoImplTest {
                 .lastName("Petrov")
                 .username(null)
                 .password(null)
-                .isActive(true)
+                .isEnabled(true)
                 .specialization(trainingTypeEntity)
                 .build();
 
