@@ -8,6 +8,8 @@ import epam.gym.entity.Trainee;
 import epam.gym.entity.Trainer;
 import epam.gym.mapper.TraineeMapper;
 import epam.gym.service.TraineeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +33,7 @@ import java.util.LinkedHashMap;
 @RequestMapping("/trainees")
 public class TraineeController {
 
+    private static final Logger log = LoggerFactory.getLogger(TraineeController.class);
     private TraineeService traineeService;
     private final TraineeMapper traineeMapper = TraineeMapper.traineeMapper;
 
@@ -41,7 +44,7 @@ public class TraineeController {
 
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> registerTraineeProfile(@RequestBody TraineeRegistrationDto traineeRegistrationDTO) {
-
+        log.info("Creating a new trainee with first name: {} and last name: {}", traineeRegistrationDTO.getFirstName(), traineeRegistrationDTO.getLastName());
         Trainee createdTrainee = traineeService.create(traineeMapper.toEntity(traineeRegistrationDTO));
         Map<String, String> response = new HashMap<>();
         response.put("username", createdTrainee.getUsername());
@@ -51,6 +54,7 @@ public class TraineeController {
 
     @GetMapping("/{username}")
     public ResponseEntity<Map<String, Object>> getTraineeProfile(@PathVariable("username") String username) {
+        log.info("Looking for a new trainee with  username: {}", username);
         Optional<Trainee> traineeOpt = traineeService.findByUsername(username);
 
         if (!traineeOpt.isPresent()) {
@@ -64,7 +68,7 @@ public class TraineeController {
         response.put("lastName", trainee.getLastName());
         response.put("dateOfBirth", trainee.getDateOfBirth());
         response.put("address", trainee.getAddress());
-        response.put("isActive", trainee.isActive());
+        response.put("isActive", trainee.isEnabled());
 
         List<Map<String, Object>> trainersList = new ArrayList<>();
         for (Trainer trainer : trainee.getTrainers()) {
@@ -91,7 +95,7 @@ public class TraineeController {
         response.put("username", updatedTrainee.getUsername());
         response.put("dateOfBirth", updatedTrainee.getDateOfBirth());
         response.put("address", updatedTrainee.getAddress());
-        response.put("isActive", updatedTrainee.isActive());
+        response.put("isActive", updatedTrainee.isEnabled());
 
         List<Map<String, Object>> trainersList = new ArrayList<>();
         if (updatedTrainee.getTrainers() != null) {
