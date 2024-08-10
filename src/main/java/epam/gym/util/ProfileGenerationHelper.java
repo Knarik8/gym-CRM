@@ -1,9 +1,11 @@
 package epam.gym.util;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
+@Component
 public class ProfileGenerationHelper {
 
 

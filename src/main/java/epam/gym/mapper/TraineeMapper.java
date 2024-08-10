@@ -1,6 +1,5 @@
 package epam.gym.mapper;
 
-import epam.gym.dto.trainee.TraineeRegistrationDto;
 import epam.gym.dto.trainee.TraineeUpdateDto;
 import epam.gym.dto.trainer.TrainerDto;
 import epam.gym.entity.Trainee;
@@ -14,8 +13,6 @@ import org.springframework.stereotype.Component;
 public interface TraineeMapper {
 
     TraineeMapper traineeMapper = Mappers.getMapper(TraineeMapper.class);
-
-    Trainee toEntity(TraineeRegistrationDto dto);
 
     Trainee toEntity(TraineeUpdateDto dto);
 

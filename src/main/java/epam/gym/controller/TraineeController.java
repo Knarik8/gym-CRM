@@ -1,6 +1,5 @@
 package epam.gym.controller;
 
-import epam.gym.dto.trainee.TraineeRegistrationDto;
 import epam.gym.dto.trainee.TraineeUpdateDto;
 import epam.gym.dto.trainer.TrainerDto;
 import epam.gym.dto.trainer.TrainerListUpdateDto;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 @RestController
@@ -40,16 +37,6 @@ public class TraineeController {
     TraineeController(TraineeService traineeService){
         this.traineeService = traineeService;
 
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> registerTraineeProfile(@RequestBody TraineeRegistrationDto traineeRegistrationDTO) {
-        log.info("Creating a new trainee with first name: {} and last name: {}", traineeRegistrationDTO.getFirstName(), traineeRegistrationDTO.getLastName());
-        Trainee createdTrainee = traineeService.create(traineeMapper.toEntity(traineeRegistrationDTO));
-        Map<String, String> response = new HashMap<>();
-        response.put("username", createdTrainee.getUsername());
-        response.put("password", createdTrainee.getPassword());
-        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{username}")

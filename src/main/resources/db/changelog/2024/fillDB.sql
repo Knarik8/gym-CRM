@@ -41,9 +41,12 @@ VALUES
     (101, 10, 1, 1, 'New York', 'Broadway'),
     (202, 20, 2, 2, 'Los Angeles', 'Sunset Boulevard');
 
-INSERT INTO authorities (username, authority)
-VALUES
-    ('john.doe', 'ROLE_ADMIN'),
-    ('jane.smith', 'ROLE_USER'),
-    ('eva.adams', 'ROLE_USER'),
-    ('alice.johnson', 'ROLE_USER');
+INSERT INTO authorities (name) VALUES
+                             ('ROLE_ADMIN'),
+                             ('ROLE_USER');
+
+INSERT INTO users_authorities (user_id, authority_id) VALUES
+                                               (1, 1),  -- John Doe -> ROLE_ADMIN
+                                               (2, 2),  -- Jane Smith -> ROLE_USER
+                                               (3, 2),  -- Eva Adams -> ROLE_USER
+                                               (4, 2);  -- Alice Johnson -> ROLE_USER

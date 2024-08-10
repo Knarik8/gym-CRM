@@ -1,7 +1,7 @@
 package epam.gym.controller;
 
-import epam.gym.dto.trainer.TrainerRegistrationDto;
 import epam.gym.dto.trainer.TrainerUpdateDto;
+import epam.gym.entity.TrainerWorkload;
 import epam.gym.entity.Trainee;
 import epam.gym.entity.Trainer;
 import epam.gym.mapper.TrainerMapper;
@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,23 +28,16 @@ import java.util.Optional;
 @RequestMapping("/trainers")
 public class TrainerController {
 
+    private RestTemplate restTemplate;
+
     private TrainerService trainerService;
+    private TrainerWorkload trainerWorkload;
     private TrainerMapper trainerMapper = TrainerMapper.trainerMapper;
 
-    TrainerController(TrainerService trainerService){
+    TrainerController(TrainerService trainerService, RestTemplate restTemplate, TrainerWorkload trainerWorkload){
         this.trainerService = trainerService;
-    }
-
-
-    @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> registerTrainerProfile(@RequestBody TrainerRegistrationDto
-                                                                                  trainerRegistrationDTO) {
-
-        Trainer createdTrainer = trainerService.create(trainerMapper.toEntity(trainerRegistrationDTO));
-        Map<String, String> response = new HashMap<>();
-        response.put("username", createdTrainer.getUsername());
-        response.put("password", createdTrainer.getPassword());
-        return ResponseEntity.ok(response);
+        this.restTemplate = restTemplate;
+        this.trainerWorkload = trainerWorkload;
     }
 
     @GetMapping("/{username}")
