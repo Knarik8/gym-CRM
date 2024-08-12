@@ -1,5 +1,6 @@
 package epam.gym.controller;
 
+import epam.gym.dto.trainer.TrainerStatusUpdateDto;
 import epam.gym.dto.trainer.TrainerUpdateDto;
 import epam.gym.entity.TrainerWorkload;
 import epam.gym.entity.Trainee;
@@ -10,13 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -28,16 +26,12 @@ import java.util.Optional;
 @RequestMapping("/trainers")
 public class TrainerController {
 
-    private RestTemplate restTemplate;
-
     private TrainerService trainerService;
-    private TrainerWorkload trainerWorkload;
     private TrainerMapper trainerMapper = TrainerMapper.trainerMapper;
 
-    TrainerController(TrainerService trainerService, RestTemplate restTemplate, TrainerWorkload trainerWorkload){
+
+    TrainerController(TrainerService trainerService) {
         this.trainerService = trainerService;
-        this.restTemplate = restTemplate;
-        this.trainerWorkload = trainerWorkload;
     }
 
     @GetMapping("/{username}")
@@ -99,14 +93,12 @@ public class TrainerController {
     }
 
     @PatchMapping("/updateStatus")
-    public ResponseEntity<String> updateTrainerStatus(@RequestParam("username") String username,
-                                                      @RequestParam("isActive") boolean isActive) {
+    public ResponseEntity<String> updateTrainerStatus(@RequestBody TrainerStatusUpdateDto request) {
         try {
-            trainerService.setActiveStatus(username, isActive);
+            trainerService.setActiveStatus(request.getUsername(), request.isActive());
             return ResponseEntity.ok("Trainer status updated successfully.");
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }
     }
-
 }
