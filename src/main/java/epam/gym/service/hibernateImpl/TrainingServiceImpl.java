@@ -1,7 +1,9 @@
 package epam.gym.service.hibernateImpl;
 
 import epam.gym.dao.TrainingDao;
+import epam.gym.dto.training.TrainingDto;
 import epam.gym.entity.Training;
+import epam.gym.mapper.TrainingMapper;
 import epam.gym.service.TrainingService;
 import lombok.NonNull;
 import org.slf4j.Logger;
@@ -15,15 +17,20 @@ public class TrainingServiceImpl implements TrainingService {
     private static final Logger logger = LoggerFactory.getLogger(TrainingServiceImpl.class);
 
     private TrainingDao trainingDao;
+    private TrainingMapper trainingMapper = TrainingMapper.trainingMapper;
 
     public TrainingServiceImpl(TrainingDao trainingDao){
         this.trainingDao = trainingDao;
     }
+
+
     @Override
-    public Training create(@NonNull Training training) {
-        Training createdTraining = trainingDao.create(training);
-        logger.info("Training created with ID: {}", createdTraining.getId());
-        return createdTraining;    }
+    public Training create(@NonNull TrainingDto trainingDto) {
+        Training training = trainingMapper.toEntity(trainingDto);
+        trainingDao.create(training);
+        logger.info("Training created with ID: {}", training.getId());
+        return training;    }
+
 
     @Override
     public Optional<Training> findById(Long id) {
