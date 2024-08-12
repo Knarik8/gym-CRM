@@ -1,5 +1,6 @@
 package epam.gym.controller;
 
+import epam.gym.dto.trainee.TraineeStatusUpdateDto;
 import epam.gym.dto.trainee.TraineeUpdateDto;
 import epam.gym.dto.trainer.TrainerDto;
 import epam.gym.dto.trainer.TrainerListUpdateDto;
@@ -113,9 +114,9 @@ public class TraineeController {
     }
 
     @PatchMapping("/updateStatus")
-    public ResponseEntity<String> updateTraineeStatus(@RequestParam("username") String username, @RequestParam("isActive") boolean isActive) {
+    public ResponseEntity<String> updateTraineeStatus(@RequestBody TraineeStatusUpdateDto request) {
         try {
-            traineeService.setActiveStatus(username, isActive);
+            traineeService.setActiveStatus(request.getUsername(), request.isActive());
             return ResponseEntity.ok("Trainee status updated successfully.");
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body(e.getMessage());
