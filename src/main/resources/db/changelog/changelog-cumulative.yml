@@ -11,4 +11,9 @@ databaseChangeLog:
       changes:
         - sqlFile:
             path: db/changelog/2024/fillDB.sql
-
+  - changeSet:
+      id: 3
+      author: Knarik Khachatryan
+      changes:
+        - sqlFile:
+            path: db/changelog/2024/sequence.sql
