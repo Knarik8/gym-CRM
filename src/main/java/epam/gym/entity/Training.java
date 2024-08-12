@@ -1,5 +1,6 @@
 package epam.gym.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
@@ -14,7 +15,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import java.time.Duration;
+import lombok.ToString;
+
+import java.util.Objects;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -23,7 +26,7 @@ import java.util.Set;
 @Entity
 @Table(name = "training")
 @Builder
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class Training {
 
     @Id
@@ -39,7 +42,7 @@ public class Training {
     @Enumerated(EnumType.STRING)
     private Set<DayOfWeek> trainingDays;
 
-    private Duration trainingDuration;
+    private Long trainingDuration;
 
     @ManyToOne
     @JoinColumn(name = "trainee_id")
@@ -47,6 +50,21 @@ public class Training {
 
     @ManyToOne
     @JoinColumn(name = "trainer_id")
+    @ToString.Exclude
+    @JsonIgnore
     private Trainer trainer;
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Training training = (Training) o;
+        return id != null && id.equals(training.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

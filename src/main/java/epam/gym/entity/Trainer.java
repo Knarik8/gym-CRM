@@ -1,5 +1,6 @@
 package epam.gym.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -15,13 +16,13 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@ToString(callSuper = true)
 @Entity
 @Table(name = "trainer")
 @SuperBuilder
@@ -36,6 +37,21 @@ public class Trainer extends User {
     private Set<Trainee> trainees = new HashSet<>();
 
     @OneToMany(mappedBy = "trainer", fetch = FetchType.EAGER)
+    @ToString.Exclude
+    @JsonIgnore
     private Set<Training> trainings = new HashSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Trainer trainer = (Trainer) o;
+        return getId() != null && getId().equals(trainer.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
 
 }
