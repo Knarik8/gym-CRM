@@ -17,7 +17,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.management.relation.RoleNotFoundException;
 import java.util.Set;
 
 @Service
@@ -27,23 +26,21 @@ public class AuthenticationService {
     private final JWTService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-
-    private final ProfileGenerationHelper profileGenerationHelper;
     private RoleDao roleDao;
 
+
     AuthenticationService(@Lazy UserService userService, JWTService jwtService, PasswordEncoder passwordEncoder,
-                          AuthenticationManager authenticationManager, ProfileGenerationHelper profileGenerationHelper,
+                          AuthenticationManager authenticationManager,
                           RoleDao roleDao){
         this.userService = userService;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
-        this.profileGenerationHelper = profileGenerationHelper;
         this.roleDao = roleDao;
     }
 
 
-    public JwtAuthenticationResponse signUp(SignUpRequest request) throws RoleNotFoundException {
+    public JwtAuthenticationResponse signUp(SignUpRequest request) {
 
         Set<String> existingUsernames = userService.getExistingUsernames();
         String generatedUsername = ProfileGenerationHelper.generateUsername(request.getFirstName(), request.getLastName(),
@@ -54,8 +51,6 @@ public class AuthenticationService {
         if ("trainee".equalsIgnoreCase(request.getUserType())) {
             RoleEntity userRole = roleDao.findByName(Role.ROLE_USER)
                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            System.out.println(userRole);
-
 
             user = Trainee.builder()
                     .firstName(request.getFirstName())
@@ -79,6 +74,7 @@ public class AuthenticationService {
         var jwt = jwtService.generateToken(user);
         return new JwtAuthenticationResponse(jwt);
     }
+
 
     public JwtAuthenticationResponse signIn(SignInRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
