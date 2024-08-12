@@ -15,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashSet;
@@ -87,7 +86,7 @@ public class TrainingDaoImplTest {
                 .trainee(trainee)
                 .trainingDays(trainingDays)
                 .trainingName("CARDIO")
-                .trainingDuration(Duration.ofMinutes(50))
+                .trainingDuration(1L)
                 .trainingType(trainingTypeEntity)
                 .build();
     }
