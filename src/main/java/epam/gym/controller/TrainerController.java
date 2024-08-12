@@ -2,7 +2,6 @@ package epam.gym.controller;
 
 import epam.gym.dto.trainer.TrainerStatusUpdateDto;
 import epam.gym.dto.trainer.TrainerUpdateDto;
-import epam.gym.entity.TrainerWorkload;
 import epam.gym.entity.Trainee;
 import epam.gym.entity.Trainer;
 import epam.gym.mapper.TrainerMapper;
