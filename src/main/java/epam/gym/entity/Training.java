@@ -1,32 +1,70 @@
 package epam.gym.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import java.time.Duration;
+import java.util.Objects;
 import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Entity
+@Table(name = "training")
+@Builder
+@EqualsAndHashCode(callSuper = false)
 public class Training {
 
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-    private Long trainerId;
+
     private String trainingName;
-    private TrainingType trainingType;
+
+    @ManyToOne
+    @JoinColumn(name = "training_type_id")
+    private TrainingTypeEntity trainingType;
+
+    @Enumerated(EnumType.STRING)
     private Set<DayOfWeek> trainingDays;
-    private Duration trainingDuration;
+
+    private Long trainingDuration;
+
+    @ManyToOne
+    @JoinColumn(name = "trainee_id")
+    private Trainee trainee;
+
+    @ManyToOne
+    @JoinColumn(name = "trainer_id")
+    @ToString.Exclude
+    @JsonIgnore
+    private Trainer trainer;
+
 
     @Override
-    public String toString() {
-        return "Training{" +
-                "trainerId=" + trainerId +
-                ", trainingName='" + trainingName + '\'' +
-                ", trainingType=" + trainingType +
-                ", trainingDays=" + trainingDays +
-                ", trainingDuration=" + trainingDuration.toMinutes() + "min" +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Training training = (Training) o;
+        return id != null && id.equals(training.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

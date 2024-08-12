@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Knarik Khachatryan
+      changes:
+        - sqlFile:
+            path: db/changelog/2024/create-tables.sql
+  - changeSet:
+      id: 2
+      author: Knarik Khachatryan
+      changes:
+        - sqlFile:
+            path: db/changelog/2024/fillDB.sql
+  - changeSet:
+      id: 3
+      author: Knarik Khachatryan
+      changes:
+        - sqlFile:
+            path: db/changelog/2024/sequence.sql

@@ -1,0 +1,103 @@
+package epam.gym.controller;
+
+import epam.gym.dto.trainer.TrainerStatusUpdateDto;
+import epam.gym.dto.trainer.TrainerUpdateDto;
+import epam.gym.entity.Trainee;
+import epam.gym.entity.Trainer;
+import epam.gym.mapper.TrainerMapper;
+import epam.gym.service.TrainerService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/trainers")
+public class TrainerController {
+
+    private TrainerService trainerService;
+    private TrainerMapper trainerMapper = TrainerMapper.trainerMapper;
+
+
+    TrainerController(TrainerService trainerService) {
+        this.trainerService = trainerService;
+    }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<Map<String, Object>> getTrainerProfile(@PathVariable("username") String username) {
+        Optional<Trainer> trainerOpt = trainerService.findTrainerByUsername(username);
+
+        if (!trainerOpt.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Trainer trainer = trainerOpt.get();
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("firstName", trainer.getFirstName());
+        response.put("lastName", trainer.getLastName());
+        response.put("trainingType", trainer.getSpecialization().getTrainingTypeName());
+        response.put("isActive", trainer.isEnabled());
+
+        List<Map<String, Object>> traineesList = new ArrayList<>();
+        for (Trainee trainee : trainer.getTrainees()) {
+            Map<String, Object> traineeMap = new LinkedHashMap<>();
+            traineeMap.put("username", trainee.getUsername());
+            traineeMap.put("firstName", trainee.getFirstName());
+            traineeMap.put("lastName", trainee.getLastName());
+            traineesList.add(traineeMap);
+        }
+        response.put("trainees", traineesList);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Map<String, Object>> updateTrainerProfile(@PathVariable("id") long id,
+                                                                    @RequestBody TrainerUpdateDto trainerUpdateDto) {
+        Trainer trainer = trainerMapper.toEntity(trainerUpdateDto);
+        trainer.setId(id);
+        Trainer updatedTrainer = trainerService.update(trainer.getId(), trainer, trainerUpdateDto.getUsername(),
+                trainerUpdateDto.getPassword());
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("firstName", updatedTrainer.getFirstName());
+        response.put("lastName", updatedTrainer.getLastName());
+        response.put("username", updatedTrainer.getUsername());
+        response.put("trainingType", updatedTrainer.getSpecialization().getTrainingTypeName());
+        response.put("isActive", updatedTrainer.isEnabled());
+
+        List<Map<String, Object>> traineesList = new ArrayList<>();
+        if (updatedTrainer.getTrainees() != null) {
+            for (Trainee trainee : updatedTrainer.getTrainees()) {
+                Map<String, Object> traineeMap = new LinkedHashMap<>();
+                traineeMap.put("username", trainee.getUsername());
+                traineeMap.put("firstName", trainee.getFirstName());
+                traineeMap.put("lastName", trainee.getLastName());
+                traineesList.add(traineeMap);
+            }
+        }
+        response.put("trainees", traineesList);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/updateStatus")
+    public ResponseEntity<String> updateTrainerStatus(@RequestBody TrainerStatusUpdateDto request) {
+        try {
+            trainerService.setActiveStatus(request.getUsername(), request.isActive());
+            return ResponseEntity.ok("Trainer status updated successfully.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+}
