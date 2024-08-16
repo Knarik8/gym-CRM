@@ -1,6 +1,7 @@
 package epam.gym.mapper;
 
 import epam.gym.dto.training.TrainingDto;
+import epam.gym.entity.TrainerWorkload;
 import epam.gym.entity.Training;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,6 +16,13 @@ public interface TrainingMapper {
     @Mapping(source = "traineeId", target = "trainee.id")
     @Mapping(source = "trainerId", target = "trainer.id")
     Training toEntity(TrainingDto dto);
+
+
+    @Mapping(source = "trainer.username", target = "username")
+    @Mapping(source = "trainer.firstName", target = "firstName")
+    @Mapping(source = "trainer.lastName", target = "lastName")
+    @Mapping(source = "training.trainingDuration", target = "trainingDuration")
+    TrainerWorkload toTrainerWorkload(Training training);
 
     @Mapping(source = "trainingType.id", target = "trainingTypeId")
     @Mapping(source = "trainee.id", target = "traineeId")

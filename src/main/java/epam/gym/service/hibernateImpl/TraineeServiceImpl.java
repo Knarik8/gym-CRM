@@ -85,6 +85,19 @@ public class TraineeServiceImpl implements TraineeService {
         return Optional.empty();
     }
 
+
+    public Optional<Trainee> findById(long id) {
+        logger.info("Attempting to find trainee with ID: {}", id);
+        Optional<Trainee> existingTraineeOpt = traineeDao.findById(id);
+        if (existingTraineeOpt.isPresent()) {
+            logger.info("Found trainee with ID: {}", id);
+            return existingTraineeOpt;
+        } else {
+            logger.warn("Failed to select trainee. Trainee with ID: {} not found.", id);
+        }
+        return Optional.empty();
+    }
+
     @Override
     public void deleteTraineeById(Long id, String username, String password) {
         logger.info("Attempting to delete trainee with ID: {}, by user: {}", id, username);

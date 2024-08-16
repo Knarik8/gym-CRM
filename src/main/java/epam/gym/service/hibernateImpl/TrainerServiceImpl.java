@@ -138,4 +138,16 @@ public class TrainerServiceImpl implements TrainerService {
         }
     }
 
+    @Override
+    public Optional<Trainer> findById(long id) {
+        Optional<Trainer> existingTrainerOpt = trainerDao.findById(id);
+        if (existingTrainerOpt.isPresent()) {
+            logger.info("Found trainer with ID: {}", id);
+            return existingTrainerOpt;
+        } else {
+            logger.warn("Trainer with ID: {} not found.", id);
+        }
+        return Optional.empty();
+    }
+
 }

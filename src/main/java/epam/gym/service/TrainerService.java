@@ -27,5 +27,8 @@ public interface TrainerService {
 
     void setActiveStatus(String username, boolean isActive);
 
+    Optional<Trainer> findById(long id);
+
+
 
 }

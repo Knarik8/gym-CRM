@@ -54,5 +54,6 @@ public class Trainee extends User {
 
     @OneToMany(mappedBy = "trainee", fetch = FetchType.EAGER)
     @JsonIgnore
+    @ToString.Exclude
     private Set<Training> trainings = new HashSet<>();
 }

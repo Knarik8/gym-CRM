@@ -22,7 +22,7 @@ public class TrainingController {
     @PostMapping("/add")
     public ResponseEntity<String> addTraining(@RequestBody TrainingDto trainingDto) {
         trainingService.create(trainingDto);
-        return ResponseEntity.ok("200 OK");
+        return ResponseEntity.ok("Training added and notification sent.");
     }
 
 }

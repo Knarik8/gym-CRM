@@ -46,6 +46,7 @@ public class Training {
 
     @ManyToOne
     @JoinColumn(name = "trainee_id")
+    @ToString.Exclude
     private Trainee trainee;
 
     @ManyToOne

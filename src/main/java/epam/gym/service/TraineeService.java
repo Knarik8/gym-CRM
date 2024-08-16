@@ -38,4 +38,5 @@ public interface TraineeService{
 
     List<TrainerDto> updateTraineeTrainers(String traineeUsername, List<String> trainerUsernames);
 
+    Optional<Trainee> findById(long id);
 }

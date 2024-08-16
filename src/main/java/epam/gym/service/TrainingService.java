@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface TrainingService {
     Training create(TrainingDto trainingDto);
     Optional<Training> findById(Long id);
+    void notifyTrainingUpdate(Training training);
 }
