@@ -22,6 +22,6 @@ public class TrainerWorkload {
     private boolean isActive;
     private LocalDateTime trainingDate;
     private Long trainingDuration;
-    private String actionType; //ADD - DELETE
+    private ActionType actionType; //ADD - DELETE
 
 }

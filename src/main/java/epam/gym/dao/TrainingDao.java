@@ -10,4 +10,5 @@ public interface TrainingDao {
 
     Optional<Training> findById(Long id);
 
+    boolean delete(Long id);
 }

@@ -28,4 +28,15 @@ public class TrainingDaoImpl implements TrainingDao {
         return Optional.ofNullable(entityManager.find(Training.class, id));
     }
 
+
+    @Override
+    @Transactional
+    public boolean delete(Long id) {
+        Training training = entityManager.find(Training.class, id);
+        if (training != null) {
+            entityManager.remove(training);
+            return true;
+        }
+        return false;
+    }
 }

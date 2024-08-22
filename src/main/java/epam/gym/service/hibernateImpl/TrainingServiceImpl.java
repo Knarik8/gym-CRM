@@ -2,6 +2,7 @@ package epam.gym.service.hibernateImpl;
 
 import epam.gym.dao.TrainingDao;
 import epam.gym.dto.training.TrainingDto;
+import epam.gym.entity.ActionType;
 import epam.gym.entity.Trainee;
 import epam.gym.entity.Trainer;
 import epam.gym.entity.TrainerWorkload;
@@ -48,7 +49,7 @@ public class TrainingServiceImpl implements TrainingService {
         training.setTrainer(trainer.get());
         trainingDao.create(training);
         logger.info("Training created with ID: {}", training.getId());
-        notifyTrainingUpdate(training);
+        notifyTrainingUpdate(training, ActionType.ADD);
         return training;    }
 
 
@@ -64,12 +65,23 @@ public class TrainingServiceImpl implements TrainingService {
         return Optional.empty();
     }
 
-    public void notifyTrainingUpdate(Training training) {
+    public void notifyTrainingUpdate(Training training, ActionType actionType) {
         String url = "http://localhost:8081/reports/trainers/update";
         TrainerWorkload trainerWorkload = trainingMapper.toTrainerWorkload(training);
-        System.out.println(trainerWorkload);
         trainerWorkload.setUsername(training.getTrainer().getUsername());
+        trainerWorkload.setActionType(actionType);
         restTemplate.postForEntity(url, trainerWorkload, String.class);
+    }
+
+    public boolean delete(Long id) {
+        Optional<Training> trainingOptional = trainingDao.findById(id);
+        if (trainingOptional.isPresent()) {
+            trainingDao.delete(id);
+            notifyTrainingUpdate(trainingOptional.get(), ActionType.DELETE);
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
