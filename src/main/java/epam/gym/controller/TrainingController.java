@@ -1,9 +1,9 @@
 package epam.gym.controller;
 
 import epam.gym.dto.training.TrainingDto;
+import epam.gym.entity.ActionType;
 import epam.gym.entity.TrainerWorkload;
 import epam.gym.entity.Training;
-import epam.gym.producer.TrainerWorkloadProducer;
 import epam.gym.service.TrainingService;
 import io.micrometer.observation.ObservationRegistry;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,15 +31,12 @@ public class TrainingController {
     private String destination;
 
     private JmsTemplate jmsTemplate;
-    private TrainerWorkloadProducer producer;
 
 
-    TrainingController(TrainingService trainingService, JmsTemplate jmsTemplate, TrainerWorkloadProducer trainerWorkloadProducer,
-                       ObservationRegistry observationRegistry){
+    TrainingController(TrainingService trainingService, JmsTemplate jmsTemplate, ObservationRegistry observationRegistry){
         this.trainingService = trainingService;
         jmsTemplate.setObservationRegistry(observationRegistry);
         this.jmsTemplate = jmsTemplate;
-        this.producer = trainerWorkloadProducer;
 
 
 
@@ -47,19 +44,17 @@ public class TrainingController {
 
     @PostMapping("/add")
     public ResponseEntity<String> addTraining(@RequestBody TrainingDto trainingDto) {
-        trainingService.create(trainingDto);
-        Training training = trainingMapper.toEntity(trainingDto);
+        Training training = trainingService.create(trainingDto);
         TrainerWorkload trainerWorkload = trainingMapper.toTrainerWorkload(training);
+        trainerWorkload.setActionType(ActionType.ADD);
 
         jmsTemplate.convertAndSend(destination, trainerWorkload);
-
-//        producer.sendTo(destination, trainerWorkload);
-
         return ResponseEntity.ok("Training added and notification sent.");
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteTraining(@PathVariable Long id) {
+
         Optional<Training> trainingOptional = trainingService.findById(id);
 
         if (trainingOptional.isPresent()) {
@@ -69,8 +64,7 @@ public class TrainingController {
 
             if (isDeleted) {
                 TrainerWorkload trainerWorkload = trainingMapper.toTrainerWorkload(training);
-
-                producer.sendTo("trainerWorkload.queue", trainerWorkload);
+                jmsTemplate.convertAndSend(destination, trainerWorkload);
 
                 return ResponseEntity.ok("Training deleted successfully.");
             } else {

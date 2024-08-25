@@ -8,16 +8,13 @@ import epam.gym.entity.Trainer;
 import epam.gym.entity.TrainerWorkload;
 import epam.gym.entity.Training;
 import epam.gym.mapper.TrainingMapper;
-import epam.gym.producer.TrainerWorkloadProducer;
 import epam.gym.service.TraineeService;
 import epam.gym.service.TrainerService;
 import epam.gym.service.TrainingService;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -38,7 +35,8 @@ public class TrainingServiceImpl implements TrainingService {
 
 
 
-    public TrainingServiceImpl(TrainingDao trainingDao, RestTemplate restTemplate, @Lazy TrainerService trainerService, TraineeService traineeService){
+    public TrainingServiceImpl(TrainingDao trainingDao, RestTemplate restTemplate, @Lazy TrainerService trainerService,
+                               TraineeService traineeService){
         this.trainingDao = trainingDao;
         this.restTemplate = restTemplate;
         this.trainerService = trainerService;
@@ -58,8 +56,6 @@ public class TrainingServiceImpl implements TrainingService {
         TrainerWorkload trainerWorkload = trainingMapper.toTrainerWorkload(training);
         trainerWorkload.setUsername(training.getTrainer().getUsername());
         trainerWorkload.setActionType(trainerWorkload.getActionType());
-//        producer.sendTo(destination, trainerWorkload);
-//        notifyTrainingUpdate(training, ActionType.ADD);
         return training;    }
 
 
