@@ -11,10 +11,12 @@ import epam.gym.mapper.TrainingMapper;
 import epam.gym.service.TraineeService;
 import epam.gym.service.TrainerService;
 import epam.gym.service.TrainingService;
+import io.micrometer.observation.ObservationRegistry;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -30,17 +32,21 @@ public class TrainingServiceImpl implements TrainingService {
     private TrainerService trainerService;
     private TraineeService traineeService;
     private final RestTemplate restTemplate;
+    private final JmsTemplate jmsTemplate;
+
 
 
 
 
 
     public TrainingServiceImpl(TrainingDao trainingDao, RestTemplate restTemplate, @Lazy TrainerService trainerService,
-                               TraineeService traineeService){
+                               TraineeService traineeService, JmsTemplate jmsTemplate, ObservationRegistry observationRegistry){
         this.trainingDao = trainingDao;
         this.restTemplate = restTemplate;
         this.trainerService = trainerService;
         this.traineeService = traineeService;
+        jmsTemplate.setObservationRegistry(observationRegistry);
+        this.jmsTemplate = jmsTemplate;
     }
 
 
@@ -88,6 +94,13 @@ public class TrainingServiceImpl implements TrainingService {
         } else {
             return false;
         }
+    }
+
+    public void convertAndSendToConsumer(Training training, String destination, ActionType actionType){
+        TrainerWorkload trainerWorkload = trainingMapper.toTrainerWorkload(training);
+        trainerWorkload.setActionType(actionType);
+
+        jmsTemplate.convertAndSend(destination, trainerWorkload);
     }
 
 }

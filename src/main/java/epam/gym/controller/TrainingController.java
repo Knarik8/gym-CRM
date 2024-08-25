@@ -2,10 +2,8 @@ package epam.gym.controller;
 
 import epam.gym.dto.training.TrainingDto;
 import epam.gym.entity.ActionType;
-import epam.gym.entity.TrainerWorkload;
 import epam.gym.entity.Training;
 import epam.gym.service.TrainingService;
-import io.micrometer.observation.ObservationRegistry;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
-import static epam.gym.mapper.TrainingMapper.trainingMapper;
 
 @RestController
 @RequestMapping("/trainings")
@@ -33,22 +30,16 @@ public class TrainingController {
     private JmsTemplate jmsTemplate;
 
 
-    TrainingController(TrainingService trainingService, JmsTemplate jmsTemplate, ObservationRegistry observationRegistry){
+    TrainingController(TrainingService trainingService){
         this.trainingService = trainingService;
-        jmsTemplate.setObservationRegistry(observationRegistry);
-        this.jmsTemplate = jmsTemplate;
-
-
 
     }
 
     @PostMapping("/add")
     public ResponseEntity<String> addTraining(@RequestBody TrainingDto trainingDto) {
         Training training = trainingService.create(trainingDto);
-        TrainerWorkload trainerWorkload = trainingMapper.toTrainerWorkload(training);
-        trainerWorkload.setActionType(ActionType.ADD);
+        trainingService.convertAndSendToConsumer(training, destination, ActionType.ADD);
 
-        jmsTemplate.convertAndSend(destination, trainerWorkload);
         return ResponseEntity.ok("Training added and notification sent.");
     }
 
@@ -58,14 +49,10 @@ public class TrainingController {
         Optional<Training> trainingOptional = trainingService.findById(id);
 
         if (trainingOptional.isPresent()) {
-            Training training = trainingOptional.get();
-
             boolean isDeleted = trainingService.delete(id);
 
             if (isDeleted) {
-                TrainerWorkload trainerWorkload = trainingMapper.toTrainerWorkload(training);
-                jmsTemplate.convertAndSend(destination, trainerWorkload);
-
+                trainingService.convertAndSendToConsumer(trainingOptional.get(), destination, ActionType.DELETE);
                 return ResponseEntity.ok("Training deleted successfully.");
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

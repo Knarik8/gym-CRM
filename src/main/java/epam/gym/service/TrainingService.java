@@ -11,4 +11,5 @@ public interface TrainingService {
     Optional<Training> findById(Long id);
     void notifyTrainingUpdate(Training training, ActionType actionType);
     boolean delete(Long id);
+    void convertAndSendToConsumer(Training training, String destination, ActionType actionType);
 }
