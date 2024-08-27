@@ -7,7 +7,6 @@ import epam.gym.service.TrainingService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,12 +21,10 @@ import java.util.Optional;
 @RequestMapping("/trainings")
 public class TrainingController {
 
-    private TrainingService trainingService;
+    private final TrainingService trainingService;
 
     @Value("${activemq.destination}")
     private String destination;
-
-    private JmsTemplate jmsTemplate;
 
 
     TrainingController(TrainingService trainingService){
