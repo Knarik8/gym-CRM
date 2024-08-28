@@ -7,6 +7,8 @@ import epam.gym.entity.Trainee;
 import epam.gym.entity.Trainer;
 import epam.gym.entity.TrainerWorkload;
 import epam.gym.entity.Training;
+import epam.gym.exception.TrainingDeletionException;
+import epam.gym.exception.TrainingNotFoundException;
 import epam.gym.mapper.TrainingMapper;
 import epam.gym.service.TraineeService;
 import epam.gym.service.TrainerService;
@@ -15,6 +17,7 @@ import io.micrometer.observation.ObservationRegistry;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,9 @@ import java.util.Optional;
 public class TrainingServiceImpl implements TrainingService {
 
     private static final Logger logger = LoggerFactory.getLogger(TrainingServiceImpl.class);
+
+    @Value("${activemq.destination}")
+    private String destination;
 
     private TrainingDao trainingDao;
     private TrainingMapper trainingMapper = TrainingMapper.trainingMapper;
@@ -62,6 +68,9 @@ public class TrainingServiceImpl implements TrainingService {
         TrainerWorkload trainerWorkload = trainingMapper.toTrainerWorkload(training);
         trainerWorkload.setUsername(training.getTrainer().getUsername());
         trainerWorkload.setActionType(trainerWorkload.getActionType());
+
+        convertAndSendToConsumer(training, destination, ActionType.ADD);
+
         return training;    }
 
 
@@ -85,14 +94,18 @@ public class TrainingServiceImpl implements TrainingService {
         restTemplate.postForEntity(url, trainerWorkload, String.class);
     }
 
-    public boolean delete(Long id) {
+    public void delete(Long id) {
         Optional<Training> trainingOptional = trainingDao.findById(id);
+
         if (trainingOptional.isPresent()) {
-            trainingDao.delete(id);
-            notifyTrainingUpdate(trainingOptional.get(), ActionType.DELETE);
-            return true;
+            boolean isDeleted = trainingDao.delete(id);
+            if (!isDeleted) {
+                throw new TrainingDeletionException();
+            }
+            convertAndSendToConsumer(trainingOptional.get(), destination, ActionType.DELETE);
+            logger.info("Training deleted with ID: {}", id);
         } else {
-            return false;
+            throw new TrainingNotFoundException(id);
         }
     }
 
