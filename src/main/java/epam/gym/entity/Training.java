@@ -17,6 +17,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
@@ -55,6 +56,7 @@ public class Training {
     @JsonIgnore
     private Trainer trainer;
 
+    private LocalDateTime trainingDate;
 
     @Override
     public boolean equals(Object o) {
