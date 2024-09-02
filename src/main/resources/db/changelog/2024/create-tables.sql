@@ -72,7 +72,8 @@ create table if not exists training
     constraint fkosdbocw0x9ygfmna67s7vtewh
     references public.training_type,
     trainingname     varchar(255),
-    trainingdays     varchar(255)[]
+    trainingdays     varchar(255)[],
+    trainingdate DATE
     );
 
 CREATE TABLE IF NOT EXISTS authorities (
