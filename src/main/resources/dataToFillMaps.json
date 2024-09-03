@@ -39,7 +39,9 @@
       "username": "masha",
       "password": "pass",
       "isActive": true,
-      "specialization": "CARDIO"
+      "specialization": {
+        "trainingTypeName": "FLEXIBILITY"
+      }
     },
     {
       "id": "4",
@@ -48,7 +50,9 @@
       "username": "anna",
       "password": "pass",
       "isActive": true,
-      "specialization": "FLEXIBILITY"
+      "specialization": {
+        "trainingTypeName": "FLEXIBILITY"
+      }
     }
   ],
   "trainings": [
@@ -56,7 +60,9 @@
       "id": "5",
       "trainerId": "3",
       "trainingName": "Cardio training",
-      "trainingType": "CARDIO",
+      "trainingType": {
+        "trainingTypeName": "FLEXIBILITY"
+      },
       "trainingDays": [
         "MONDAY",
         "WEDNESDAY"
@@ -67,7 +73,9 @@
       "id": "6",
       "trainerId": "3",
       "trainingName": "FLEXIBILITY training",
-      "trainingType": "FLEXIBILITY",
+      "trainingType": {
+        "trainingTypeName": "FLEXIBILITY"
+      },
       "trainingDays": [
         "TUESDAY",
         "THURSDAY"
