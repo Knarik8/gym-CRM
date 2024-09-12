@@ -39,4 +39,9 @@ public class TrainingTypeDaoImpl implements TrainingTypeDao {
                 TrainingTypeEntity.class);
             return query.getResultList();
         }
+
+    @Override
+    public TrainingTypeEntity findById(Long id){
+        return entityManager.find(TrainingTypeEntity.class, id);
+    }
 }

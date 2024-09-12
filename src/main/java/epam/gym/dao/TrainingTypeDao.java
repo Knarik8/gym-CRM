@@ -12,4 +12,6 @@ public interface TrainingTypeDao {
     TrainingTypeEntity findByName(TrainingType trainingType);
 
     List<TrainingTypeEntity> getAllTrainingTypes();
+
+    TrainingTypeEntity findById(Long id);
 }

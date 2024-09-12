@@ -23,18 +23,6 @@ import java.util.Properties;
 @EnableTransactionManagement
 public class JPAConfig {
 
-    @Value("${jdbc.driverClassName}")
-    private String driverClassName;
-
-    @Value("${jdbc.url}")
-    private String url;
-
-    @Value("${jdbc.user}")
-    private String username;
-
-    @Value("${jdbc.pass}")
-    private String password;
-
     @Value("${hibernate.hbm2ddl.auto}")
     private String hbm2ddlAuto;
 
@@ -43,9 +31,9 @@ public class JPAConfig {
 
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(dataSource());
+        em.setDataSource(dataSource);
         em.setPackagesToScan("epam.gym.entity");
         final JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
@@ -56,7 +44,26 @@ public class JPAConfig {
 
     @Profile("dev")
     @Bean
-    public DataSource dataSource() {
+    public DataSource dataSource(@Value("${jdbc.driverClassName}") String driverClassName,
+                                 @Value("${jdbc.url}") String url,
+                                 @Value("${jdbc.user}") String username,
+                                 @Value("${jdbc.pass}") String password) {
+        final DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(driverClassName);
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+
+        return dataSource;
+    }
+
+    @Profile("test")
+    @Bean
+    public DataSource testDataSource(
+            @Value("${jdbc.driverClassName}") String driverClassName,
+            @Value("${jdbc.test.url}") String url,
+            @Value("${jdbc.test.user}") String username,
+            @Value("${jdbc.test.pass}") String password) {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(driverClassName);
         dataSource.setUrl(url);
@@ -67,9 +74,9 @@ public class JPAConfig {
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager() {
+    public PlatformTransactionManager transactionManager(LocalContainerEntityManagerFactoryBean entityManagerFactory) {
         final JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+        transactionManager.setEntityManagerFactory(entityManagerFactory.getObject());
 
         return transactionManager;
     }
