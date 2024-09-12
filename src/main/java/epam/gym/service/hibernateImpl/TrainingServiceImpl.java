@@ -1,12 +1,14 @@
 package epam.gym.service.hibernateImpl;
 
 import epam.gym.dao.TrainingDao;
+import epam.gym.dao.TrainingTypeDao;
 import epam.gym.dto.training.TrainingDto;
 import epam.gym.entity.ActionType;
 import epam.gym.entity.Trainee;
 import epam.gym.entity.Trainer;
 import epam.gym.entity.TrainerWorkload;
 import epam.gym.entity.Training;
+import epam.gym.entity.TrainingTypeEntity;
 import epam.gym.exception.TrainingDeletionException;
 import epam.gym.exception.TrainingNotFoundException;
 import epam.gym.mapper.TrainingMapper;
@@ -29,6 +31,7 @@ import java.util.Optional;
 public class TrainingServiceImpl implements TrainingService {
 
     private static final Logger logger = LoggerFactory.getLogger(TrainingServiceImpl.class);
+    private final TrainingTypeDao trainingTypeDao;
 
     @Value("${activemq.destination}")
     private String destination;
@@ -46,13 +49,14 @@ public class TrainingServiceImpl implements TrainingService {
 
 
     public TrainingServiceImpl(TrainingDao trainingDao, RestTemplate restTemplate, @Lazy TrainerService trainerService,
-                               TraineeService traineeService, JmsTemplate jmsTemplate, ObservationRegistry observationRegistry){
+                               TraineeService traineeService, JmsTemplate jmsTemplate, ObservationRegistry observationRegistry, TrainingTypeDao trainingTypeDao){
         this.trainingDao = trainingDao;
         this.restTemplate = restTemplate;
         this.trainerService = trainerService;
         this.traineeService = traineeService;
         jmsTemplate.setObservationRegistry(observationRegistry);
         this.jmsTemplate = jmsTemplate;
+        this.trainingTypeDao = trainingTypeDao;
     }
 
 
@@ -63,6 +67,8 @@ public class TrainingServiceImpl implements TrainingService {
         Training training = trainingMapper.toEntity(trainingDto);
         training.setTrainee(trainee.get());
         training.setTrainer(trainer.get());
+        TrainingTypeEntity trainingType = trainingTypeDao.findById(trainingDto.getTrainingTypeId());
+        training.setTrainingType(trainingType);
         trainingDao.create(training);
         logger.info("Training created with ID: {}", training.getId());
         TrainerWorkload trainerWorkload = trainingMapper.toTrainerWorkload(training);
